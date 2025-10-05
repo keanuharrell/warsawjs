@@ -1,0 +1,24 @@
+{
+  "name": "@warsawjs/core",
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@warsawjs/email": "workspace:*",
+    "@aws-sdk/client-iot-data-plane": "^3.896.0",
+    "@aws-sdk/client-ses": "^3.893.0",
+    "@openauthjs/openauth": "^0.4.3",
+    "@react-email/render": "^1.2.3",
+    "electrodb": "^3.4.5",
+    "sst": "*",
+    "valibot": "^1.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

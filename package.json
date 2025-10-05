@@ -1,0 +1,26 @@
+{
+  "name": "warsawjs",
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "bun@1.2.18",
+  "author": {
+    "email": "keanuharrell@icloud.com",
+    "name": "Keanu Harrell",
+    "url": "https://www.keanuharrell.com"
+  },
+  "scripts": {
+    "dev": "sst dev",
+    "deploy:demo": "sst deploy --stage demo",
+    "deploy:prod": "sst deploy --stage prod",
+    "typecheck": "bun run --cwd packages/core typecheck && bun run --cwd packages/web typecheck && bun run --cwd packages/functions typecheck"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "sst": "^3"
+  }
+}

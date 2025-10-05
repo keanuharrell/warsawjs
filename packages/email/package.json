@@ -1,0 +1,27 @@
+{
+  "name": "@warsawjs/email",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "email build",
+    "dev": "email dev --port 3001",
+    "export": "email export",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./emails/index.ts"
+  },
+  "dependencies": {
+    "@react-email/components": "0.5.3",
+    "react-dom": "^19.1.1",
+    "react": "^19.1.1"
+  },
+  "devDependencies": {
+    "@react-email/preview-server": "4.2.11",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "react-email": "4.2.11",
+    "typescript": "^5.9.2"
+  }
+}
