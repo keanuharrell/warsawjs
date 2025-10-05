@@ -19,5 +19,6 @@ export default $config({
     await import("./infra/database");
     await import("./infra/email");
     await import("./infra/dev");
+    await import("./infra/slides");
   },
 });
