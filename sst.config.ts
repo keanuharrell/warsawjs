@@ -21,6 +21,8 @@ export default $config({
     await import("./infra/dev");
     await import("./infra/slides");
     await import("./infra/web");
+    await import("./infra/secrets");
+    await import("./infra/realtime");
 
   },
 });
