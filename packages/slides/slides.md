@@ -1,635 +1,853 @@
 ---
-# try also 'default' to start simple
-theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
-background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
-info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# apply UnoCSS classes to the current slide
+theme: default
+background: https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072
+title: SST - Serious Infrastructure Without Losing Your Sanity
 class: text-center
-# https://sli.dev/features/drawing
 drawings:
   persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: slide-left
-# enable MDC Syntax: https://sli.dev/features/mdc
 mdc: true
 ---
 
-# Welcome to Slidev
+# SST
+## Serious Infrastructure Without Losing Your Sanity
 
-Presentation slides for developers
+WarsawJS 2025 · Keanu Harrell
 
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
-</div>
-
-<div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
+<div class="abs-br m-6 flex gap-2">
+  <a href="https://github.com/sst/sst" target="_blank" class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
     <carbon:logo-github />
   </a>
 </div>
 
 <!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
+Hello WarsawJS!
+Today: Deploy a complete app on AWS without losing your mind
+3 seconds of silence to create anticipation
 -->
-
----
-transition: fade-out
----
-
-# What is Slidev?
-
-Slidev is a slides maker and presenter designed for developers, consist of the following features
-
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-<br>
-<br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
-
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
-</style>
-
-<!--
-Here is another comment.
--->
-
----
-transition: slide-up
-level: 2
----
-
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
-
-## Keyboard Shortcuts
-
-|                                                     |                             |
-| --------------------------------------------------- | --------------------------- |
-| <kbd>right</kbd> / <kbd>space</kbd>                 | next animation or slide     |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd>                                       | previous slide              |
-| <kbd>down</kbd>                                     | next slide                  |
-
-<!-- https://sli.dev/guide/animations.html#click-animation -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-layout: two-cols
-layoutClass: gap-16
----
-
-# Table of contents
-
-You can use the `Toc` component to generate a table of contents for your slides:
-
-```html
-<Toc minDepth="1" maxDepth="1" />
-```
-
-The title will be inferred from your slide content, or you can override it with `title` and `level` in your frontmatter.
-
-::right::
-
-<Toc text-sm minDepth="1" maxDepth="2" />
-
----
-layout: image-right
-image: https://cover.sli.dev
----
-
-# Code
-
-Use code snippets and get the highlighting directly, and even types hover!
-
-```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-import { computed, ref } from 'vue'
-
-const count = ref(0)
-const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
-```
-
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="342" color="#953" width="2" arrowSize="1" />
-
-<!-- This allow you to embed external code blocks -->
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
-<!--
-Notes can also sync with clicks
-
-[click] This will be highlighted after the first click
-
-[click] Highlighted with `count = ref(0)`
-
-[click:3] Last click (skip two clicks)
--->
-
----
-level: 2
----
-
-# Shiki Magic Move
-
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
-
-````md magic-move {lines: true}
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
-```
-
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  }
-}
-```
-
-```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: 'John Doe',
-      books: [
-        'Vue 2 - Advanced Guide',
-        'Vue 3 - Basic Guide',
-        'Vue 4 - The Mystery'
-      ]
-    }
-  })
-}
-```
-
-Non-code blocks are ignored.
-
-```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-}
-</script>
-```
-````
-
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
-<!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
--->
-
----
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/guide/theme-addon#use-theme) and
-check out the [Awesome Themes Gallery](https://sli.dev/resources/theme-gallery).
-
----
-
-# Clicks Animations
-
-You can add `v-click` to elements to add a click animation.
-
-<div v-click>
-
-This shows up when you click the slide:
-
-```html
-<div v-click>This shows up when you click the slide.</div>
-```
-
-</div>
-
-<br>
-
-<v-click>
-
-The <span v-mark.red="3"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="4">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
-
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
-
-</v-click>
-
-<div mt-20 v-click>
-
-[Learn more](https://sli.dev/guide/animations#click-animation)
-
-</div>
-
----
-
-# Motions
-
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
-
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }"
-  :click-3="{ x: 80 }"
-  :leave="{ x: 1000 }"
->
-  Slidev
-</div>
-```
-
-<div class="w-60 relative">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 30, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn more](https://sli.dev/guide/animations.html#motion)
-
-</div>
-
----
-
-# LaTeX
-
-LaTeX is supported out-of-box. Powered by [KaTeX](https://katex.org/).
-
-<div h-3 />
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$ {1|3|all}
-\begin{aligned}
-\nabla \cdot \vec{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \vec{B} &= 0 \\
-\nabla \times \vec{E} &= -\frac{\partial\vec{B}}{\partial t} \\
-\nabla \times \vec{B} &= \mu_0\vec{J} + \mu_0\varepsilon_0\frac{\partial\vec{E}}{\partial t}
-\end{aligned}
-$$
-
-[Learn more](https://sli.dev/features/latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-Learn more: [Mermaid Diagrams](https://sli.dev/features/mermaid) and [PlantUML Diagrams](https://sli.dev/features/plantuml)
-
----
-foo: bar
-dragPos:
-  square: 691,32,167,_,-16
----
-
-# Draggable Elements
-
-Double-click on the draggable elements to edit their positions.
-
-<br>
-
-###### Directive Usage
-
-```md
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-```
-
-<br>
-
-###### Component Usage
-
-```md
-<v-drag text-3xl>
-  <div class="i-carbon:arrow-up" />
-  Use the `v-drag` component to have a draggable container!
-</v-drag>
-```
-
-<v-drag pos="663,206,261,_,-15">
-  <div text-center text-3xl border border-main rounded>
-    Double-click me!
-  </div>
-</v-drag>
-
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-
-###### Draggable Arrow
-
-```md
-<v-drag-arrow two-way />
-```
-
-<v-drag-arrow pos="67,452,253,46" two-way op70 />
-
----
-src: ./pages/imported-slides.md
-hide: false
----
-
----
-
-# Monaco Editor
-
-Slidev provides built-in Monaco Editor support.
-
-Add `{monaco}` to the code block to turn it into an editor:
-
-```ts {monaco}
-import { ref } from 'vue'
-import { emptyArray } from './external'
-
-const arr = ref(emptyArray(10))
-```
-
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-import { version } from 'vue'
-import { emptyArray, sayHello } from './external'
-
-sayHello()
-console.log(`vue ${version}`)
-console.log(emptyArray<number>(10).reduce(fib => [...fib, fib.at(-1)! + fib.at(-2)!], [1, 1]))
-```
 
 ---
 layout: center
 class: text-center
 ---
 
-# Learn More
+# 🙋 Quick Question
 
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
+## Who here has spent an entire weekend<br/>configuring AWS Lambda, API Gateway, and DynamoDB...
+
+<v-click>
+
+## ...just to build a TODO app? 🤔
+
+</v-click>
+
+<v-click>
+
+<div class="text-6xl mt-8">
+
+😅
+
+</div>
+
+</v-click>
+
+<!--
+[Wait for hands to raise - 10 seconds]
+Keep your hand up if you enjoyed it...
+[Hands go down, people laugh]
+-->
+
+---
+layout: statement
+---
+
+# Today, we do better.
+
+<v-click>
+
+<div class="text-2xl mt-8">
+
+We're going to build an app that **you all**<br/>
+will use **right now**...
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="text-3xl mt-8 text-green-400">
+
+...and you'll see why SST changes everything.
+
+</div>
+
+</v-click>
+
+<!--
+Pause after "we do better"
+Build anticipation
+-->
+
+---
+transition: slide-up
+---
+
+# "Classic" AWS Architecture
+
+```yaml {monaco}
+# terraform/main.tf (excerpt from 400+ lines)
+resource "aws_lambda_function" "api" {
+  filename    = "lambda.zip"
+  role        = aws_iam_role.lambda.arn
+  handler     = "index.handler"
+  runtime     = "nodejs20.x"
+  # ... environment, vpc, layers
+}
+
+resource "aws_iam_role" "lambda" {
+  name = "lambda-execution-role"
+  # ... 40 more lines
+}
+
+resource "aws_api_gateway_rest_api" "api" {
+  # ... 30 more lines
+}
+
+# ... 330+ more lines
+```
+
+<div v-click class="absolute bottom-8 right-8 text-red-500 text-xl">
+
+⏱️ **2 days** · 🤯 **10 coffees** · 😭 **3 meltdowns**
+
+</div>
+
+<!--
+This is the usual nightmare
+Show the pain first
+-->
+
+---
+layout: two-cols
+---
+
+# With SST
+
+```typescript
+// sst.config.ts
+export default $config({
+  app(input) {
+    return {
+      name: "warsawjs-demo",
+      removal: "remove",
+    };
+  },
+  async run() {
+    new sst.aws.Nextjs("MyWeb");
+  },
+});
+```
+
+<v-click>
+
+<div class="mt-8 text-green-500 text-xl">
+
+✅ **5 minutes**<br/>
+✅ **Your sanity intact**
+
+</div>
+
+</v-click>
+
+::right::
+
+<v-click>
+
+<div class="ml-8">
+
+## What SST Generates
+
+- ✅ Lambda Functions
+- ✅ API Gateway
+- ✅ CloudFront CDN
+- ✅ S3 Buckets
+- ✅ DynamoDB Tables
+- ✅ IAM Roles & Policies
+- ✅ CloudWatch Logs
+- ✅ SSL Certificates
+
+<div class="text-sm mt-4 opacity-75">
+
+Everything, automatically.
+
+</div>
+
+</div>
+
+</v-click>
+
+<!--
+Show the contrast
+Simple vs Complex
+-->
+
+---
+layout: center
+class: text-center
+---
+
+# Let's Prove It
+
+<v-click>
+
+<div class="text-xl mt-8">
+
+Open your phone right now 📱
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="flex justify-center my-8">
+  <div class="bg-white p-6 rounded-lg">
+    <img src="/qr-code-demo.svg" class="w-48 h-48" />
+  </div>
+</div>
+
+## warsawjs.keanuharrell.com
+
+</v-click>
+
+<!--
+Wait for people to join - 30 seconds
+"I see people connecting... great!"
+-->
+
+---
+layout: center
+class: text-center
+---
+
+# 🎮 Demo #1
+## Real-Time Chat
+
+<v-click>
+
+<div class="text-xl mt-8">
+
+Type your **favorite tech stack** in the chat!
+
+</div>
+
+</v-click>
+
+<!--
+On admin panel: Click "Enable Chat"
+Wait 20 seconds for messages
+Read a few out loud: "React... Vue... jQuery?! 😄"
+-->
+
+---
+layout: two-cols
+---
+
+# The Chat You Just Used
+
+```typescript
+const chat = new sst.aws.Realtime(
+  "Chat",
+  {
+    handler: "chat.handler"
+  }
+);
+```
+
+<v-click>
+
+<div class="mt-8 text-lg">
+
+**3 lines of code.**
+
+That's it.
+
+</div>
+
+</v-click>
+
+::right::
+
+<v-click>
+
+<div class="ml-8">
+
+## What SST Generated
+
+- API Gateway WebSocket
+- Lambda connect handler
+- Lambda message handler
+- Lambda disconnect handler
+- DynamoDB connections table
+- 17 IAM permissions
+- CloudWatch log groups
+- Auto-scaling config
+
+<div class="mt-6 text-yellow-400 text-lg">
+
+**Terraform:** 247 lines
+
+</div>
+
+</div>
+
+</v-click>
+
+<!--
+Emphasize the difference
+SST did the expert work for you
+-->
+
+---
+layout: center
+class: text-center
+---
+
+# 🗳️ Demo #2
+## Interactive Vote
+
+<v-click>
+
+<div class="text-2xl mt-8">
+
+**What's the hardest part of AWS?**
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="grid grid-cols-2 gap-4 mt-8 text-left max-w-2xl mx-auto">
+  <div class="bg-blue-500/20 p-4 rounded">A) IAM Permissions 🔐</div>
+  <div class="bg-green-500/20 p-4 rounded">B) The Bill 💸</div>
+  <div class="bg-yellow-500/20 p-4 rounded">C) Finding the Right Service 🔍</div>
+  <div class="bg-red-500/20 p-4 rounded">D) All of the Above 😅</div>
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-8 text-xl">
+
+Vote now on your phone!
+
+</div>
+
+</v-click>
+
+<!--
+Admin panel: Click "Enable Vote"
+Wait 15 seconds
+Watch the results come in
+-->
+
+---
+layout: center
+---
+
+# Live Results
+
+<div class="max-w-4xl mx-auto">
+
+<div class="text-center mb-8 text-2xl">
+Results coming in real-time...
+</div>
+
+<!-- Placeholder for live results - will show via iframe or component -->
+<div class="bg-gray-800 p-8 rounded-lg">
+  <div class="space-y-4">
+    <div class="text-lg opacity-75">
+      Check your phones to see the live results!
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!--
+Point to the screen
+"Look at option D climbing..."
+"You all know the pain!"
+Wait until voting stabilizes
+-->
+
+---
+layout: two-cols
+---
+
+# The Vote System
+
+```typescript
+// Vote handler
+export const handler = async (event) => {
+  const vote = JSON.parse(event.body);
+
+  // Save to DynamoDB
+  await db.votes.create({
+    id: ulid(),
+    option: vote.option,
+    timestamp: Date.now()
+  });
+
+  // Broadcast update
+  await iot.publish({
+    topic: "votes/results",
+    payload: results
+  });
+};
+```
+
+::right::
+
+<v-click>
+
+<div class="ml-8">
+
+## What Just Happened
+
+✅ **Real-time** aggregation<br/>
+✅ **Zero errors**<br/>
+✅ **Auto-scaled**<br/>
+✅ **Type-safe** everywhere
+
+<div class="mt-8 bg-gray-800 p-4 rounded">
+
+**Infrastructure:**
+- DynamoDB for storage
+- IoT for real-time
+- Lambda for logic
+- CloudFront for delivery
+
+</div>
+
+<div class="mt-4 text-lg text-green-400">
+
+Cost: **$0.0001** per vote
+
+</div>
+
+</div>
+
+</v-click>
+
+<!--
+Emphasize the real-time aspect
+Zero configuration for scaling
+-->
+
+---
+layout: statement
+---
+
+# Let's Talk About What Makes SST Different
+
+---
+layout: center
+---
+
+# SST vs Alternatives
+
+<div class="mt-8">
+
+|  | Firebase | Terraform | SST |
+|--|----------|-----------|-----|
+| **Simple** | ✅ Yes | ❌ No | ✅ Yes |
+| **Full AWS** | ❌ No | ✅ Yes | ✅ Yes |
+| **Type-Safe** | ⚠️ Partial | ❌ No | ✅ Yes |
+| **Vendor Lock** | ❌ High | ✅ None | ✅ None |
+| **Cost** | 💰💰 High | 💰 Low | 💰 Low |
+| **Learning Curve** | 🟢 Easy | 🔴 Hard | 🟢 Easy |
+
+</div>
+
+<v-click>
+
+<div class="text-center mt-8 text-2xl text-green-400">
+
+SST = Best of Both Worlds
+
+</div>
+
+</v-click>
+
+<!--
+Position SST clearly
+Not just "another tool"
+Unique value proposition
+-->
+
+---
+layout: center
+---
+
+# The 3 SST Principles
+
+<v-clicks>
+
+<div class="grid grid-cols-3 gap-8 mt-12">
+
+<div class="text-center">
+
+## 1️⃣
+
+**Infrastructure = Code**
+
+Real TypeScript, not YAML
+
+</div>
+
+<div class="text-center">
+
+## 2️⃣
+
+**Prod = Local**
+
+Same behavior everywhere
+
+</div>
+
+<div class="text-center">
+
+## 3️⃣
+
+**Complex ≠ Complicated**
+
+AWS power, developer simplicity
+
+</div>
+
+</div>
+
+</v-clicks>
+
+<!--
+Core philosophy
+What makes SST special
+-->
+
+---
+layout: two-cols
+---
+
+# Local Development
+
+```bash
+sst dev
+```
+
+<v-click>
+
+<div class="mt-8">
+
+**What happens:**
+
+✅ Hot reload in **0.3s**<br/>
+✅ Same as production<br/>
+✅ Real-time logs<br/>
+✅ No redeploy needed
+
+</div>
+
+</v-click>
+
+::right::
+
+<v-click>
+
+<div class="ml-8">
+
+## Live Demo
+
+Change code → Save
+
+```typescript
+export const handler = async () => {
+  return {
+    statusCode: 200,
+    body: "Hello Warsaw!" // ← Edit
+  };
+};
+```
+
+<div class="mt-4 text-green-400 font-mono text-sm">
+
+```
+[sst] Reloaded in 0.3s ⚡
+```
+
+</div>
+
+<div class="mt-8 text-xl">
+
+**Terraform:** Redeploy = 5 min<br/>
+**SST:** Hot reload = 0.3s 🔥
+
+</div>
+
+</div>
+
+</v-click>
+
+<!--
+Show the killer feature
+DX that matters
+-->
+
+---
+layout: center
+class: text-center
+---
+
+# 📊 The Cost
+
+<v-click>
+
+<div class="text-6xl mt-12 text-green-400 font-bold">
+
+$0.08
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-8 text-2xl opacity-75">
+
+For everything you just saw
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="mt-12">
+
+| Service | Cost |
+|---------|------|
+| Lambda invocations | $0.0006 |
+| DynamoDB operations | $0.0013 |
+| WebSocket connections | $0.0003 |
+| IoT messages | $0.03 |
+| CloudFront transfer | $0.048 |
+| **Total** | **$0.08** |
+
+</div>
+
+</v-click>
+
+<!--
+Shock value
+Serverless pricing advantage
+-->
+
+---
+layout: two-cols
+---
+
+# What You Actually Built
+
+<div class="space-y-4 mt-4">
+
+✅ Real-time chat<br/>
+✅ Live voting system<br/>
+✅ WebSocket API<br/>
+✅ Database with aggregation<br/>
+✅ Global CDN<br/>
+✅ Auto-scaling infrastructure<br/>
+✅ Monitoring & logging<br/>
+✅ SSL certificates
+
+</div>
+
+::right::
+
+<v-click>
+
+<div class="ml-8">
+
+## Time Comparison
+
+**With Terraform:**
+- 📝 400+ lines of config
+- ⏱️ 2 days of work
+- 🐛 Probably buggy
+- 😰 Stressful debugging
+
+**With SST:**
+- 📝 12 lines of code
+- ⏱️ 10 minutes
+- ✅ Production-ready
+- 😌 Actually enjoyable
+
+</div>
+
+</v-click>
+
+<!--
+Recap what was accomplished
+Emphasize the difference
+-->
+
+---
+layout: center
+class: text-center
+---
+
+# 🎯 Try It Yourself
+
+<div class="grid grid-cols-2 gap-8 mt-12 max-w-3xl mx-auto">
+
+<div class="bg-gray-800 p-6 rounded-lg">
+
+### Get Started
+
+```bash
+npx create-sst@latest
+```
+
+[docs.sst.dev](https://docs.sst.dev)
+
+</div>
+
+<div class="bg-gray-800 p-6 rounded-lg">
+
+### This Demo
+
+<div class="my-4">
+  <img src="/qr-code-repo.svg" class="w-32 h-32 mx-auto" />
+</div>
+
+github.com/keanuharrell/warsawjs
+
+</div>
+
+</div>
+
+<v-click>
+
+<div class="mt-12 text-xl">
+
+⭐ Star [sst/sst](https://github.com/sst/sst) on GitHub<br/>
+🐦 Tweet **#WarsawJS** **#SST**
+
+</div>
+
+</v-click>
+
+<!--
+Clear call to action
+Make it easy to follow up
+-->
+
+---
+layout: center
+class: text-center
+---
+
+# Questions? 🙋
+
+<div class="mt-12 grid grid-cols-3 gap-8 max-w-2xl mx-auto text-left">
+
+<div>
+
+**Docs**
+docs.sst.dev
+
+</div>
+
+<div>
+
+**Discord**
+sst.dev/discord
+
+</div>
+
+<div>
+
+**Twitter**
+@SST_dev
+
+</div>
+
+</div>
+
+<!--
+Open for Q&A
+Have answers ready for common questions
+-->
+
+---
+layout: statement
+---
+
+# One More Thing...
+
+<v-click>
+
+<div class="text-xl mt-8">
+
+Remember when I said 10 minutes to build this?
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="text-3xl mt-8">
+
+I deployed it **this morning**<br/>
+while drinking coffee ☕
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="text-4xl mt-12 text-green-400 font-bold">
+
+That's the power of SST.
+
+</div>
+
+</v-click>
+
+<!--
+Leave them with a smile
+Reinforce the message
+-->
+
+---
+layout: end
+class: text-center
+---
+
+# Dziękuję! 🇵🇱
+
+**Keanu Harrell**
+
+[keanuharrell.com](https://keanuharrell.com) · [@keanuharrell](https://twitter.com/keanuharrell)
+
+<div class="mt-8 opacity-75">
+
+Built with [SST](https://sst.dev) · Slides with [Slidev](https://sli.dev)
+
+</div>
 
 <PoweredBySlidev mt-10 />
