@@ -20,5 +20,7 @@ export default $config({
     await import("./infra/email");
     await import("./infra/dev");
     await import("./infra/slides");
+    await import("./infra/web");
+
   },
 });
