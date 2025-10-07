@@ -1,19 +1,27 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { WaitingRoom } from './waiting-room'
 import { ChatDemo } from './chat-demo'
 import { VoteDemo } from './vote-demo'
 import { useRealtimeTopic } from '@/lib/realtime'
-import type { ControlMessage } from '@warsawjs/core/realtime'
+import type { ControlMessage, ChatMessage } from '@warsawjs/core/realtime'
+
+type VoteResults = { A: number; B: number; C: number; D: number }
 
 interface DemoClientProps {
   initialMode?: 'waiting' | 'chat' | 'vote'
+  initialMessages: ChatMessage[]
+  initialVotes: VoteResults
 }
 
-export function DemoClient({ initialMode = 'waiting' }: DemoClientProps) {
+export function DemoClient({
+  initialMode = 'waiting',
+  initialMessages,
+  initialVotes
+}: DemoClientProps) {
   const [mode, setMode] = useState<'waiting' | 'chat' | 'vote'>(initialMode)
 
   // Listen to control messages from admin
@@ -34,8 +42,8 @@ export function DemoClient({ initialMode = 'waiting' }: DemoClientProps) {
   return (
     <>
       {mode === 'waiting' && <WaitingRoom />}
-      {mode === 'chat' && <ChatDemo />}
-      {mode === 'vote' && <VoteDemo />}
+      {mode === 'chat' && <ChatDemo initialMessages={initialMessages} />}
+      {mode === 'vote' && <VoteDemo initialVotes={initialVotes} />}
 
       {/* Debug controls - only in development */}
       {process.env.NODE_ENV === 'development' && (

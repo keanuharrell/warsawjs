@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -9,21 +9,31 @@ import { useUsername } from '@/lib/use-username'
 import { UsernamePrompt } from './username-prompt'
 import type { ChatMessage } from '@warsawjs/core/realtime'
 
-export function ChatDemo() {
+interface ChatDemoProps {
+  initialMessages: ChatMessage[]
+}
+
+export function ChatDemo({ initialMessages }: ChatDemoProps) {
   const [message, setMessage] = useState('')
   const { username, isLoading, saveUsername, hasUsername } = useUsername()
 
-  const { messages, publish } = useRealtimeTopic<ChatMessage>('chat')
+  const { messages: realtimeMessages, publish } = useRealtimeTopic<ChatMessage>('chat')
 
-  // Show username prompt if no username is set
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-[400px]">Loading...</div>
-  }
+  // Combine initial messages + realtime messages (avoid duplicates)
+  const allMessages = useMemo(() => {
+    const messageMap = new Map<string, ChatMessage>()
 
-  if (!hasUsername) {
-    return <UsernamePrompt onSubmit={saveUsername} />
-  }
+    // Add initial messages
+    initialMessages.forEach(msg => messageMap.set(msg.id, msg))
 
+    // Add realtime messages (will overwrite if same ID)
+    realtimeMessages.forEach(msg => messageMap.set(msg.id, msg))
+
+    // Sort by timestamp
+    return Array.from(messageMap.values()).sort((a, b) => a.timestamp - b.timestamp)
+  }, [initialMessages, realtimeMessages])
+
+  // Define handleSubmit before any conditional returns (Rules of Hooks)
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     if (!message.trim()) return
@@ -51,6 +61,15 @@ export function ChatDemo() {
     }
   }, [message, username, publish])
 
+  // Show username prompt if no username is set
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-[400px]">Loading...</div>
+  }
+
+  if (!hasUsername) {
+    return <UsernamePrompt onSubmit={saveUsername} />
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-2">
@@ -64,12 +83,12 @@ export function ChatDemo() {
       </p>
 
       <Card className="p-4 h-96 overflow-y-auto mb-4 space-y-2">
-        {messages.length === 0 ? (
+        {allMessages.length === 0 ? (
           <p className="text-muted-foreground text-center py-20">
             No messages yet. Be the first!
           </p>
         ) : (
-          messages.map((msg, idx) => (
+          allMessages.map((msg, idx) => (
             <div key={msg.id || idx} className="bg-accent rounded-lg px-4 py-2">
               <span className="font-medium text-primary">{msg.username}:</span>{' '}
               <span>{msg.text}</span>

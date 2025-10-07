@@ -3,8 +3,16 @@ import { AdminDashboard } from '../components/admin-dashboard'
 import { auth, login } from './actions/auth.actions';
 import { Resource } from 'sst';
 import { RealtimeProvider } from '@/lib/realtime-provider';
+import { headers } from 'next/headers';
+
+// Force dynamic rendering - don't cache this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function AdminPage() {
+  // Force Next.js to treat this as dynamic by accessing headers
+  await headers();
+
   const user = await auth();
 
   if (!user) {

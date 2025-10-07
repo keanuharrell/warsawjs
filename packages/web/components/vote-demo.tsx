@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRealtimeTopic } from '@/lib/realtime'
 import type { VoteMessage } from '@warsawjs/core/realtime'
@@ -15,30 +15,16 @@ const options = [
   { id: 'D' as const, text: 'All of the Above 😅' },
 ]
 
-export function VoteDemo() {
+interface VoteDemoProps {
+  initialVotes: VoteResults
+}
+
+export function VoteDemo({ initialVotes }: VoteDemoProps) {
   const [voted, setVoted] = useState(false)
   const [userVote, setUserVote] = useState<VoteOption | null>(null)
   const [userId] = useState(() => `user_${Math.random().toString(36).substr(2, 9)}`)
-  const [initialVotes, setInitialVotes] = useState<VoteResults>({ A: 0, B: 0, C: 0, D: 0 })
-  const [loading, setLoading] = useState(true)
 
   const { messages, publish } = useRealtimeTopic<VoteMessage>('vote')
-
-  // Load existing votes from database on mount
-  useEffect(() => {
-    fetch('/api/demo/vote')
-      .then(res => res.json())
-      .then(data => {
-        if (data.votes) {
-          setInitialVotes(data.votes)
-        }
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error('Failed to load votes:', err)
-        setLoading(false)
-      })
-  }, [])
 
   // Calculate results from initial votes + real-time messages
   const results = useMemo(() => {
@@ -91,7 +77,6 @@ export function VoteDemo() {
             <Button
               key={option.id}
               onClick={() => handleVote(option.id)}
-              disabled={loading}
               variant={userVote === option.id ? "default" : "outline"}
               className="w-full h-auto p-0 relative overflow-hidden"
             >
