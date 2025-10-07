@@ -7,9 +7,10 @@ const JWKS = createRemoteJWKSet(new URL(`${Resource.Auth.url}/.well-known/jwks.j
 export const handler = realtime.authorizer(async (token) => {
   const prefix = `${Resource.App.name}/${Resource.App.stage}`;
 
+  // Validate token
   const isValid = token === Resource.RealtimeAuthorizerToken.value;
 
-  
+  console.log('[Authorizer] Connection attempt - Valid:', isValid);
 
   return isValid
     ? {

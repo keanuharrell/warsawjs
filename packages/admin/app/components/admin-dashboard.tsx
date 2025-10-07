@@ -30,17 +30,20 @@ export function AdminDashboard() {
   })
 
   const handleEnableChat = useCallback(async () => {
+    console.log('[Admin] Attempting to enable chat, connected:', connected)
     const message: ControlMessage = {
       action: 'enable_chat',
       timestamp: Date.now(),
     }
     try {
+      console.log('[Admin] Publishing message:', message)
       await publish(message)
+      console.log('[Admin] Message published successfully')
       setChatEnabled(true)
     } catch (error) {
-      console.error('Failed to enable chat:', error)
+      console.error('[Admin] Failed to enable chat:', error)
     }
-  }, [publish])
+  }, [publish, connected])
 
   const handleEnableVote = useCallback(async () => {
     const message: ControlMessage = {

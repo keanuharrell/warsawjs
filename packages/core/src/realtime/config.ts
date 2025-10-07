@@ -15,6 +15,7 @@ export const getTopic = (type: TopicType, appName: string, stage: string): strin
 export interface MqttConfig {
   endpoint: string
   authorizerToken: string
+  authorizerName: string
   appName: string
   stage: string
 }

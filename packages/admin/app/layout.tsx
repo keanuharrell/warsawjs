@@ -30,9 +30,18 @@ export default function RootLayout({
   const realtimeConfig: MqttConfig = {
     endpoint: Resource.Realtime.endpoint,
     authorizerToken: Resource.RealtimeAuthorizerToken.value,
+    authorizerName: Resource.Realtime.authorizer || 'RealtimeAuthorizer',
     appName: Resource.App.name,
     stage: Resource.App.stage,
   };
+
+  console.log('[Layout] Realtime config:', {
+    endpoint: realtimeConfig.endpoint,
+    authorizerName: realtimeConfig.authorizerName,
+    appName: realtimeConfig.appName,
+    stage: realtimeConfig.stage,
+    hasToken: !!realtimeConfig.authorizerToken
+  });
 
   return (
     <html lang="en" suppressHydrationWarning>

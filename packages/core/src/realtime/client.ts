@@ -53,10 +53,16 @@ export class RealtimeClient {
 
     return new Promise((resolve, reject) => {
       try {
-        this.client = this.mqttFactory(this.config.endpoint, {
-          protocol: 'wss',
-          username: 'token',
+        // Build the WebSocket URL with custom authorizer
+        const url = `wss://${this.config.endpoint}/mqtt?x-amz-customauthorizer-name=${this.config.authorizerName}`
+
+        console.log('[Realtime] Connecting to:', url)
+
+        this.client = this.mqttFactory(url, {
+          protocolVersion: 5,
+          username: '', // Must be empty for custom authorizer
           password: this.config.authorizerToken,
+          clientId: `client_${Math.random().toString(36).substring(2, 15)}`,
           reconnectPeriod: 5000,
           connectTimeout: 30000,
         })
@@ -75,6 +81,7 @@ export class RealtimeClient {
 
         this.client.on('message', (topic: string, payload: Buffer) => {
           const message = payload.toString()
+          console.log('[Realtime] Received message on topic:', topic, message)
           const handlers = this.callbacks.get(topic)
           if (handlers) {
             handlers.forEach(handler => handler(message))
@@ -87,6 +94,14 @@ export class RealtimeClient {
 
         this.client.on('close', () => {
           console.log('[Realtime] Connection closed')
+        })
+
+        this.client.on('offline', () => {
+          console.warn('[Realtime] Client is offline')
+        })
+
+        this.client.on('disconnect', (packet: any) => {
+          console.warn('[Realtime] Disconnected:', packet)
         })
 
       } catch (error) {
