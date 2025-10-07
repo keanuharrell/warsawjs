@@ -1,6 +1,6 @@
 import { render } from "@react-email/render";
 import { AuthCode, Welcome } from "@askmyroom/email";
-import { DemoStarted } from "@warsawjs/email/emails/demo-started";
+import { DemoStarted } from "@warsawjs/email";
 import { EmailTemplate } from "./types";
 
 // Email template rendering functions

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -44,7 +44,7 @@ export function ChatDemo() {
     <div className="max-w-4xl mx-auto">
       <h2 className="text-3xl font-bold mb-2">💬 Live Chat</h2>
       <p className="text-lg text-muted-foreground mb-6">
-        What's your favorite tech stack?
+        What&apos;s your favorite tech stack?
       </p>
 
       <Card className="p-4 h-96 overflow-y-auto mb-4 space-y-2">

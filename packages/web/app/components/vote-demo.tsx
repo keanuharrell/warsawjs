@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRealtimeTopic } from '@/lib/realtime'
 import type { VoteMessage } from '@warsawjs/core/realtime'
@@ -62,7 +62,7 @@ export function VoteDemo() {
   return (
     <div className="max-w-4xl mx-auto">
       <h2 className="text-3xl font-bold mb-2">🗳️ Live Poll</h2>
-      <p className="text-xl mb-8">What's the hardest part of AWS?</p>
+      <p className="text-xl mb-8">What&apos;s the hardest part of AWS?</p>
 
       <div className="space-y-4">
         {options.map((option) => {

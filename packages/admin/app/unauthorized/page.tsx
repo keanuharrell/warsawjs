@@ -2,12 +2,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
-export default function UnauthorizedPage({
+export default async function UnauthorizedPage({
   searchParams,
 }: {
-  searchParams: { reason?: string }
+  searchParams: Promise<{ reason?: string }>
 }) {
-  const reason = searchParams.reason || 'You are not authorized to access this application.'
+  const params = await searchParams
+  const reason = params.reason || 'You are not authorized to access this application.'
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-accent to-background p-4">

@@ -26,7 +26,7 @@ export const useRealtimeConnection = () => {
   const config = useRealtimeConfig()
   const [connected, setConnected] = useState(false)
   const [error, setError] = useState<string>()
-  const clientRef = useRef<RealtimeClient>()
+  const clientRef = useRef<RealtimeClient | undefined>(undefined)
 
   useEffect(() => {
     const client = getRealtimeClient(config)
@@ -87,7 +87,7 @@ export const useRealtimeTopic = <T = unknown>(
         console.error(`[useRealtimeTopic] Failed to unsubscribe from ${topic}:`, err)
       })
     }
-  }, [connected, topicType])
+  }, [connected, topicType, config])
 
   const publish = useCallback(async (data: T) => {
     const client = getRealtimeClient(config)
