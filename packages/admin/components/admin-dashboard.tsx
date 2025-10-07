@@ -80,6 +80,26 @@ export function AdminDashboard({
     }
   }, [publish])
 
+  const handleEnableEmail = useCallback(async () => {
+    const message: ControlMessage = {
+      action: 'enable_email',
+      timestamp: Date.now(),
+    }
+    try {
+      // Save state to database
+      await fetch('/api/demo/state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'email' }),
+      })
+
+      // Publish to MQTT
+      await publish(message)
+    } catch (error) {
+      console.error('Failed to enable email:', error)
+    }
+  }, [publish])
+
   const handleReset = useCallback(async () => {
     const message: ControlMessage = {
       action: 'reset',
@@ -195,6 +215,24 @@ export function AdminDashboard({
                 variant={voteEnabled ? 'outline' : 'default'}
               >
                 {voteEnabled ? 'Active' : 'Enable Vote'}
+              </Button>
+            </div>
+
+            <Separator />
+
+            {/* Email Control */}
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <h3 className="font-medium">📧 Email Recap</h3>
+                <p className="text-sm text-muted-foreground">
+                  Let attendees request presentation recap
+                </p>
+              </div>
+              <Button
+                onClick={handleEnableEmail}
+                variant="default"
+              >
+                Enable Email
               </Button>
             </div>
 

@@ -16,7 +16,7 @@ export interface VoteMessage {
 }
 
 export interface ControlMessage {
-  action: 'enable_chat' | 'enable_vote' | 'reset'
+  action: 'enable_chat' | 'enable_vote' | 'enable_email' | 'reset'
   timestamp: number
 }
 

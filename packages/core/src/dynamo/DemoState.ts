@@ -16,7 +16,7 @@ export const DemoStateEntity = new Entity(
         default: "current", // Single record for current state
       },
       mode: {
-        type: ["waiting", "chat", "vote"] as const,
+        type: ["waiting", "chat", "vote", "email"] as const,
         required: true,
         default: "waiting",
       },
@@ -62,7 +62,7 @@ export const DemoStateEntity = new Entity(
 
 export type DemoState = {
   id: string;
-  mode: "waiting" | "chat" | "vote";
+  mode: "waiting" | "chat" | "vote" | "email";
   chatEnabled: boolean;
   voteEnabled: boolean;
   updatedAt: number;

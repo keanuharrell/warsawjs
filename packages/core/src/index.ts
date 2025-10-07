@@ -12,3 +12,6 @@ export { emailService } from "./email";
 
 // Realtime/MQTT
 export * from "./realtime";
+
+// Demo configuration
+export * from "./demo";
