@@ -9,25 +9,12 @@ import { VoteDemo } from './vote-demo'
 import { useRealtimeTopic } from '@/lib/realtime'
 import type { ControlMessage } from '@warsawjs/core/realtime'
 
-export function DemoClient() {
-  const [mode, setMode] = useState<'waiting' | 'chat' | 'vote'>('waiting')
-  const [loading, setLoading] = useState(true)
+interface DemoClientProps {
+  initialMode?: 'waiting' | 'chat' | 'vote'
+}
 
-  // Load initial state from database
-  useEffect(() => {
-    fetch('/api/demo/state')
-      .then(res => res.json())
-      .then(data => {
-        if (data.state) {
-          setMode(data.state.mode || 'waiting')
-        }
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error('Failed to load initial state:', err)
-        setLoading(false)
-      })
-  }, [])
+export function DemoClient({ initialMode = 'waiting' }: DemoClientProps) {
+  const [mode, setMode] = useState<'waiting' | 'chat' | 'vote'>(initialMode)
 
   // Listen to control messages from admin
   useRealtimeTopic<ControlMessage>('control', (message) => {
@@ -43,10 +30,6 @@ export function DemoClient() {
         break
     }
   })
-
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
-  }
 
   return (
     <>

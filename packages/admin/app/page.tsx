@@ -1,4 +1,4 @@
-import { MqttConfig } from '@warsawjs/core';
+import { MqttConfig, DemoStateDB } from '@warsawjs/core';
 import { AdminDashboard } from '../components/admin-dashboard'
 import { auth, login } from './actions/auth.actions';
 import { Resource } from 'sst';
@@ -19,9 +19,15 @@ export default async function AdminPage() {
     stage: Resource.App.stage,
   };
 
+  // Load initial demo state from database
+  const initialState = await DemoStateDB.get().catch(() => null);
+
   return (
   <RealtimeProvider config={realtimeConfig}>
-    <AdminDashboard />
+    <AdminDashboard
+      initialChatEnabled={initialState?.chatEnabled}
+      initialVoteEnabled={initialState?.voteEnabled}
+    />
   </RealtimeProvider>
   );
 }

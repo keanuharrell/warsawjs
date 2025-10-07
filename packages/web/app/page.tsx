@@ -1,6 +1,6 @@
 import { RealtimeProvider } from '@/lib/realtime-provider'
 import { DemoClient } from '@/components/demo-client'
-import { MqttConfig } from '@warsawjs/core';
+import { MqttConfig, DemoStateDB } from '@warsawjs/core';
 import { Resource } from 'sst';
 
 export default async function Home() {
@@ -12,6 +12,9 @@ export default async function Home() {
     appName: Resource.App.name,
     stage: Resource.App.stage,
   };
+
+  // Load initial demo state from database
+  const initialState = await DemoStateDB.get().catch(() => null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent to-background">
@@ -26,7 +29,7 @@ export default async function Home() {
 
       <main className="container mx-auto px-4 py-8">
         <RealtimeProvider config={realtimeConfig}>
-          <DemoClient />
+          <DemoClient initialMode={initialState?.mode} />
         </RealtimeProvider>
       </main>
     </div>

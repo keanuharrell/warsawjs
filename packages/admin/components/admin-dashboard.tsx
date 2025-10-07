@@ -9,9 +9,17 @@ import { useRealtimeTopic, useRealtimeConnection } from '@/lib/realtime'
 import type { ControlMessage } from '@warsawjs/core/realtime'
 import { logout } from '@/app/actions/auth.actions'
 
-export function AdminDashboard() {
-  const [chatEnabled, setChatEnabled] = useState(false)
-  const [voteEnabled, setVoteEnabled] = useState(false)
+interface AdminDashboardProps {
+  initialChatEnabled?: boolean
+  initialVoteEnabled?: boolean
+}
+
+export function AdminDashboard({
+  initialChatEnabled = false,
+  initialVoteEnabled = false
+}: AdminDashboardProps) {
+  const [chatEnabled, setChatEnabled] = useState(initialChatEnabled)
+  const [voteEnabled, setVoteEnabled] = useState(initialVoteEnabled)
 
   const { connected } = useRealtimeConnection()
   const { publish } = useRealtimeTopic<ControlMessage>('control', (message) => {
