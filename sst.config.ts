@@ -19,11 +19,10 @@ export default $config({
     await import("./infra/secrets");
     await import("./infra/database");
     await import("./infra/email");
-    await import("./infra/dev");
     await import("./infra/auth");
     await import("./infra/realtime");
     await import("./infra/slides");
     await import("./infra/web");
-
+    await import("./infra/dev");
   },
 });
