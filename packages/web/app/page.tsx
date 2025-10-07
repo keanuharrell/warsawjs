@@ -1,11 +1,17 @@
+import { RealtimeProvider } from '@/lib/realtime-provider'
 import { DemoClient } from './components/demo-client'
+import { MqttConfig } from '@warsawjs/core';
+import { Resource } from 'sst';
 
 export default async function Home() {
-  // Server-side: Can access SST Resources, env vars, etc.
-  // const config = {
-  //   controlTopicEndpoint: Resource.Control?.endpoint || '',
-  //   chatTopicEndpoint: Resource.Chat?.endpoint || '',
-  // }
+  // Server-side only: access SST Resources
+  const realtimeConfig: MqttConfig = {
+    endpoint: Resource.Realtime.endpoint,
+    authorizerToken: Resource.RealtimeAuthorizerToken.value,
+    authorizerName: Resource.Realtime.authorizer,
+    appName: Resource.App.name,
+    stage: Resource.App.stage,
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent to-background">
@@ -19,7 +25,9 @@ export default async function Home() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <DemoClient />
+        <RealtimeProvider config={realtimeConfig}>
+          <DemoClient />
+        </RealtimeProvider>
       </main>
     </div>
   )

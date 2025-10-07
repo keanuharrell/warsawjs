@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "./providers";
-import { Resource } from "sst";
-import { RealtimeProvider } from "@/lib/realtime-provider";
-import type { MqttConfig } from "@warsawjs/core/realtime";
+import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,29 +18,18 @@ export const metadata: Metadata = {
   description: "Interactive demo showcasing SST's power for serverless AWS infrastructure",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Server-side only: access SST Resources
-  const realtimeConfig: MqttConfig = {
-    endpoint: Resource.Realtime.endpoint,
-    authorizerToken: Resource.RealtimeAuthorizerToken.value,
-    authorizerName: Resource.Realtime.authorizer,
-    appName: Resource.App.name,
-    stage: Resource.App.stage,
-  };
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <RealtimeProvider config={realtimeConfig}>
-            {children}
-          </RealtimeProvider>
+          {children}
         </Providers>
       </body>
     </html>
