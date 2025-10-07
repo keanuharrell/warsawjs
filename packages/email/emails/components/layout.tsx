@@ -39,7 +39,7 @@ export function Layout({ children, title = "WarsawJS Live Demo" }: LayoutProps) 
               © {new Date().getFullYear()} WarsawJS Demo · Powered by SST & AWS IoT Core
             </Text>
             <Text style={footerLinks}>
-              <Link href="https://github.com/yourusername/warsawjs" style={link}>
+              <Link href="https://github.com/keanuharrell/warsawjs" style={link}>
                 View on GitHub
               </Link>
               {" · "}

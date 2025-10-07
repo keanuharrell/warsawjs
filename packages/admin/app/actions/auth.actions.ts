@@ -28,6 +28,12 @@ export async function auth() {
   return verified.subject;
 }
 
+export async function getAccessToken() {
+  const cookies = await getCookies();
+  const accessToken = cookies.get("access_token");
+  return accessToken?.value;
+}
+
 export async function login() {
   const cookies = await getCookies();
   const accessToken = cookies.get("access_token");

@@ -13,9 +13,10 @@ export default async function Home() {
   await headers();
 
   // Server-side only: access SST Resources
+  // Web clients get write access (can publish to chat/vote)
   const realtimeConfig: MqttConfig = {
     endpoint: Resource.Realtime.endpoint,
-    authorizerToken: Resource.RealtimeAuthorizerToken.value,
+    authorizerToken: Resource.RealtimeWriteToken.value,
     authorizerName: Resource.Realtime.authorizer,
     appName: Resource.App.name,
     stage: Resource.App.stage,

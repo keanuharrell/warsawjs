@@ -1,6 +1,6 @@
 import { MqttConfig, DemoStateDB } from '@warsawjs/core';
 import { AdminDashboard } from '../components/admin-dashboard'
-import { auth, login } from './actions/auth.actions';
+import { auth, login, getAccessToken } from './actions/auth.actions';
 import { Resource } from 'sst';
 import { RealtimeProvider } from '@/lib/realtime-provider';
 import { headers } from 'next/headers';
@@ -18,10 +18,19 @@ export default async function AdminPage() {
   if (!user) {
     await login();
   }
+
+  // Get JWT token for MQTT authorization
+  const jwtToken = await getAccessToken();
+
+  if (!jwtToken) {
+    await login();
+  }
+
   // Server-side only: access SST Resources
+  // Admin uses JWT token for authentication via JWKS
   const realtimeConfig: MqttConfig = {
     endpoint: Resource.Realtime.endpoint,
-    authorizerToken: Resource.RealtimeAuthorizerToken.value,
+    authorizerToken: jwtToken!,
     authorizerName: Resource.Realtime.authorizer,
     appName: Resource.App.name,
     stage: Resource.App.stage,
@@ -35,6 +44,7 @@ export default async function AdminPage() {
     <AdminDashboard
       initialChatEnabled={initialState?.chatEnabled}
       initialVoteEnabled={initialState?.voteEnabled}
+      initialEmailEnabled={initialState?.emailEnabled}
     />
   </RealtimeProvider>
   );
