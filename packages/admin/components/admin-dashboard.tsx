@@ -12,14 +12,17 @@ import { logout } from '@/app/actions/auth.actions'
 interface AdminDashboardProps {
   initialChatEnabled?: boolean
   initialVoteEnabled?: boolean
+  initialEmailEnabled?: boolean
 }
 
 export function AdminDashboard({
   initialChatEnabled = false,
-  initialVoteEnabled = false
+  initialVoteEnabled = false,
+  initialEmailEnabled = false
 }: AdminDashboardProps) {
   const [chatEnabled, setChatEnabled] = useState(initialChatEnabled)
   const [voteEnabled, setVoteEnabled] = useState(initialVoteEnabled)
+  const [emailEnabled, setEmailEnabled] = useState(initialEmailEnabled)
 
   const { connected } = useRealtimeConnection()
   const { publish } = useRealtimeTopic<ControlMessage>('control', (message) => {
@@ -31,9 +34,13 @@ export function AdminDashboard({
       case 'enable_vote':
         setVoteEnabled(true)
         break
+      case 'enable_email':
+        setEmailEnabled(true)
+        break
       case 'reset':
         setChatEnabled(false)
         setVoteEnabled(false)
+        setEmailEnabled(false)
         break
     }
   })
@@ -53,7 +60,10 @@ export function AdminDashboard({
 
       // Publish to MQTT for real-time updates
       await publish(message)
+      // Radio behavior: only one active at a time
       setChatEnabled(true)
+      setVoteEnabled(false)
+      setEmailEnabled(false)
     } catch (error) {
       console.error('[Admin] Failed to enable chat:', error)
     }
@@ -74,7 +84,10 @@ export function AdminDashboard({
 
       // Publish to MQTT
       await publish(message)
+      // Radio behavior: only one active at a time
+      setChatEnabled(false)
       setVoteEnabled(true)
+      setEmailEnabled(false)
     } catch (error) {
       console.error('Failed to enable vote:', error)
     }
@@ -90,11 +103,15 @@ export function AdminDashboard({
       await fetch('/api/demo/state', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'email' }),
+        body: JSON.stringify({ mode: 'email', emailEnabled: true }),
       })
 
       // Publish to MQTT
       await publish(message)
+      // Radio behavior: only one active at a time
+      setChatEnabled(false)
+      setVoteEnabled(false)
+      setEmailEnabled(true)
     } catch (error) {
       console.error('Failed to enable email:', error)
     }
@@ -115,6 +132,7 @@ export function AdminDashboard({
       await publish(message)
       setChatEnabled(false)
       setVoteEnabled(false)
+      setEmailEnabled(false)
     } catch (error) {
       console.error('Failed to reset:', error)
     }
@@ -171,6 +189,10 @@ export function AdminDashboard({
                 <div className={`w-3 h-3 rounded-full ${voteEnabled ? 'bg-green-500' : 'bg-gray-500'}`} />
                 <span className="text-sm">Vote {voteEnabled ? 'Enabled' : 'Disabled'}</span>
               </div>
+              <div className="flex items-center gap-2">
+                <div className={`w-3 h-3 rounded-full ${emailEnabled ? 'bg-green-500' : 'bg-gray-500'}`} />
+                <span className="text-sm">Email {emailEnabled ? 'Enabled' : 'Disabled'}</span>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -192,8 +214,7 @@ export function AdminDashboard({
               </div>
               <Button
                 onClick={handleEnableChat}
-                disabled={chatEnabled}
-                variant={chatEnabled ? 'outline' : 'default'}
+                variant={chatEnabled ? 'default' : 'outline'}
               >
                 {chatEnabled ? 'Active' : 'Enable Chat'}
               </Button>
@@ -211,8 +232,7 @@ export function AdminDashboard({
               </div>
               <Button
                 onClick={handleEnableVote}
-                disabled={voteEnabled}
-                variant={voteEnabled ? 'outline' : 'default'}
+                variant={voteEnabled ? 'default' : 'outline'}
               >
                 {voteEnabled ? 'Active' : 'Enable Vote'}
               </Button>
@@ -230,9 +250,9 @@ export function AdminDashboard({
               </div>
               <Button
                 onClick={handleEnableEmail}
-                variant="default"
+                variant={emailEnabled ? 'default' : 'outline'}
               >
-                Enable Email
+                {emailEnabled ? 'Active' : 'Enable Email'}
               </Button>
             </div>
 
@@ -249,39 +269,9 @@ export function AdminDashboard({
               <Button
                 onClick={handleReset}
                 variant="destructive"
-                disabled={!chatEnabled && !voteEnabled}
+                disabled={!chatEnabled && !voteEnabled && !emailEnabled}
               >
                 Reset
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common presentation workflows</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  handleReset()
-                  setTimeout(handleEnableChat, 500)
-                }}
-              >
-                Demo Chat Only
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  handleReset()
-                  setTimeout(handleEnableVote, 500)
-                }}
-              >
-                Demo Vote Only
               </Button>
             </div>
           </CardContent>

@@ -211,11 +211,7 @@ Open your phone right now 📱
 
 <v-click>
 
-<div class="flex justify-center my-8">
-  <div class="bg-white p-6 rounded-lg">
-    <img src="/qr-code-demo.svg" class="w-48 h-48" />
-  </div>
-</div>
+<QRCode />
 
 ## warsawjs.keanuharrell.com
 
@@ -728,9 +724,7 @@ npx create-sst@latest
 
 ### This Demo
 
-<div class="my-4">
-  <img src="/qr-code-repo.svg" class="w-32 h-32 mx-auto" />
-</div>
+<QRCode url="https://github.com/keanuharrell/warsawjs" :size="128" />
 
 github.com/keanuharrell/warsawjs
 

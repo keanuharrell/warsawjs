@@ -13,4 +13,7 @@ export const slides = new sst.aws.StaticSite("Slides", {
     command: "bun dev",
   },
   path: "packages/slides",
+  environment: {
+    PUBLIC_DOMAIN: domain,
+  }
 });
