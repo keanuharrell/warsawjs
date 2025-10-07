@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { WaitingRoom } from './waiting-room'
@@ -11,6 +11,23 @@ import type { ControlMessage } from '@warsawjs/core/realtime'
 
 export function DemoClient() {
   const [mode, setMode] = useState<'waiting' | 'chat' | 'vote'>('waiting')
+  const [loading, setLoading] = useState(true)
+
+  // Load initial state from database
+  useEffect(() => {
+    fetch('/api/demo/state')
+      .then(res => res.json())
+      .then(data => {
+        if (data.state) {
+          setMode(data.state.mode || 'waiting')
+        }
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to load initial state:', err)
+        setLoading(false)
+      })
+  }, [])
 
   // Listen to control messages from admin
   useRealtimeTopic<ControlMessage>('control', (message) => {
@@ -26,6 +43,10 @@ export function DemoClient() {
         break
     }
   })
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
+  }
 
   return (
     <>

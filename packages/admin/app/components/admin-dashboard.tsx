@@ -36,6 +36,14 @@ export function AdminDashboard() {
       timestamp: Date.now(),
     }
     try {
+      // Save state to database (web app has the API routes)
+      await fetch(`${process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'}/api/demo/state`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'chat', chatEnabled: true }),
+      })
+
+      // Publish to MQTT for real-time updates
       console.log('[Admin] Publishing message:', message)
       await publish(message)
       console.log('[Admin] Message published successfully')
@@ -51,6 +59,14 @@ export function AdminDashboard() {
       timestamp: Date.now(),
     }
     try {
+      // Save state to database
+      await fetch(`${process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'}/api/demo/state`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'vote', voteEnabled: true }),
+      })
+
+      // Publish to MQTT
       await publish(message)
       setVoteEnabled(true)
     } catch (error) {
@@ -64,6 +80,12 @@ export function AdminDashboard() {
       timestamp: Date.now(),
     }
     try {
+      // Reset database
+      await fetch(`${process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'}/api/demo/reset`, {
+        method: 'POST',
+      })
+
+      // Publish to MQTT
       await publish(message)
       setChatEnabled(false)
       setVoteEnabled(false)

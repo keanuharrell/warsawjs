@@ -25,6 +25,14 @@ export function ChatDemo() {
     }
 
     try {
+      // Save to database
+      await fetch('/api/demo/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(chatMessage),
+      })
+
+      // Publish to MQTT for real-time updates
       await publish(chatMessage)
       setMessage('')
     } catch (error) {
