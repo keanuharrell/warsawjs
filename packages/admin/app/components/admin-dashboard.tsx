@@ -1,33 +1,73 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { useRealtimeTopic, useRealtimeConnection } from '@/lib/realtime'
+import type { ControlMessage } from '@warsawjs/core/realtime'
 
 export function AdminDashboard() {
   const [chatEnabled, setChatEnabled] = useState(false)
   const [voteEnabled, setVoteEnabled] = useState(false)
 
-  const handleEnableChat = async () => {
-    // TODO: Publish to IoT Control topic
-    console.log('Publishing: enable_chat')
-    setChatEnabled(true)
-  }
+  const { connected } = useRealtimeConnection()
+  const { publish } = useRealtimeTopic<ControlMessage>('control', (message) => {
+    // Listen to control messages to sync state
+    switch (message.action) {
+      case 'enable_chat':
+        setChatEnabled(true)
+        break
+      case 'enable_vote':
+        setVoteEnabled(true)
+        break
+      case 'reset':
+        setChatEnabled(false)
+        setVoteEnabled(false)
+        break
+    }
+  })
 
-  const handleEnableVote = async () => {
-    // TODO: Publish to IoT Control topic
-    console.log('Publishing: enable_vote')
-    setVoteEnabled(true)
-  }
+  const handleEnableChat = useCallback(async () => {
+    const message: ControlMessage = {
+      action: 'enable_chat',
+      timestamp: Date.now(),
+    }
+    try {
+      await publish(message)
+      setChatEnabled(true)
+    } catch (error) {
+      console.error('Failed to enable chat:', error)
+    }
+  }, [publish])
 
-  const handleReset = async () => {
-    // TODO: Publish to IoT Control topic
-    console.log('Publishing: reset')
-    setChatEnabled(false)
-    setVoteEnabled(false)
-  }
+  const handleEnableVote = useCallback(async () => {
+    const message: ControlMessage = {
+      action: 'enable_vote',
+      timestamp: Date.now(),
+    }
+    try {
+      await publish(message)
+      setVoteEnabled(true)
+    } catch (error) {
+      console.error('Failed to enable vote:', error)
+    }
+  }, [publish])
+
+  const handleReset = useCallback(async () => {
+    const message: ControlMessage = {
+      action: 'reset',
+      timestamp: Date.now(),
+    }
+    try {
+      await publish(message)
+      setChatEnabled(false)
+      setVoteEnabled(false)
+    } catch (error) {
+      console.error('Failed to reset:', error)
+    }
+  }, [publish])
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,8 +81,11 @@ export function AdminDashboard() {
                 Control panel for live demo
               </p>
             </div>
-            <Badge variant="outline" className="text-green-600 border-green-600">
-              ✓ Connected
+            <Badge
+              variant="outline"
+              className={connected ? "text-green-600 border-green-600" : "text-red-600 border-red-600"}
+            >
+              {connected ? '✓ Connected' : '✗ Disconnected'}
             </Badge>
           </div>
         </div>

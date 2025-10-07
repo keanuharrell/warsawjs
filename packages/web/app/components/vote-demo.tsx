@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { useRealtimeTopic } from '@/lib/realtime'
+import type { VoteMessage } from '@warsawjs/core/realtime'
 
 type VoteOption = 'A' | 'B' | 'C' | 'D'
 type VoteResults = Record<VoteOption, number>
@@ -15,18 +17,35 @@ const options = [
 
 export function VoteDemo() {
   const [voted, setVoted] = useState(false)
-  const [results, setResults] = useState<VoteResults>({ A: 0, B: 0, C: 0, D: 0 })
+  const [userId] = useState(() => `user_${Math.random().toString(36).substr(2, 9)}`)
 
-  const handleVote = (optionId: VoteOption) => {
+  const { messages, publish } = useRealtimeTopic<VoteMessage>('vote')
+
+  // Calculate results from all vote messages
+  const results = useMemo(() => {
+    const counts: VoteResults = { A: 0, B: 0, C: 0, D: 0 }
+    messages.forEach((msg) => {
+      counts[msg.option] = (counts[msg.option] || 0) + 1
+    })
+    return counts
+  }, [messages])
+
+  const handleVote = useCallback(async (optionId: VoteOption) => {
     if (voted) return
 
-    // TODO: Send via IoT
-    setResults((prev) => ({
-      ...prev,
-      [optionId]: prev[optionId] + 1,
-    }))
-    setVoted(true)
-  }
+    const voteMessage: VoteMessage = {
+      option: optionId,
+      userId,
+      timestamp: Date.now(),
+    }
+
+    try {
+      await publish(voteMessage)
+      setVoted(true)
+    } catch (error) {
+      console.error('Failed to submit vote:', error)
+    }
+  }, [voted, userId, publish])
 
   const total = Object.values(results).reduce((a, b) => a + b, 0)
   const percentage = (option: VoteOption) =>

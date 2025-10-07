@@ -6,19 +6,26 @@ import { Button } from '@/components/ui/button'
 import { WaitingRoom } from './waiting-room'
 import { ChatDemo } from './chat-demo'
 import { VoteDemo } from './vote-demo'
+import { useRealtimeTopic } from '@/lib/realtime'
+import type { ControlMessage } from '@warsawjs/core/realtime'
 
 export function DemoClient() {
   const [mode, setMode] = useState<'waiting' | 'chat' | 'vote'>('waiting')
 
-  // TODO: Listen to IoT control topic
-  // useEffect(() => {
-  //   const client = mqtt.connect(config.controlTopicEndpoint)
-  //   client.on('message', (topic, msg) => {
-  //     const data = JSON.parse(msg.toString())
-  //     if (data.action === 'enable_chat') setMode('chat')
-  //     if (data.action === 'enable_vote') setMode('vote')
-  //   })
-  // }, [])
+  // Listen to control messages from admin
+  useRealtimeTopic<ControlMessage>('control', (message) => {
+    switch (message.action) {
+      case 'enable_chat':
+        setMode('chat')
+        break
+      case 'enable_vote':
+        setMode('vote')
+        break
+      case 'reset':
+        setMode('waiting')
+        break
+    }
+  })
 
   return (
     <>

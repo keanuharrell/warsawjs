@@ -1,33 +1,36 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-
-interface Message {
-  id: string
-  text: string
-  username: string
-}
+import { useRealtimeTopic } from '@/lib/realtime'
+import type { ChatMessage } from '@warsawjs/core/realtime'
 
 export function ChatDemo() {
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<Message[]>([])
+  const [username] = useState(`User${Math.floor(Math.random() * 1000)}`)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { messages, publish } = useRealtimeTopic<ChatMessage>('chat')
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     if (!message.trim()) return
 
-    // TODO: Send via IoT
-    const newMessage: Message = {
+    const chatMessage: ChatMessage = {
       id: Date.now().toString(),
       text: message,
-      username: `User${Math.floor(Math.random() * 1000)}`,
+      username,
+      timestamp: Date.now(),
     }
-    setMessages((prev) => [...prev, newMessage])
-    setMessage('')
-  }
+
+    try {
+      await publish(chatMessage)
+      setMessage('')
+    } catch (error) {
+      console.error('Failed to send message:', error)
+    }
+  }, [message, username, publish])
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -42,8 +45,8 @@ export function ChatDemo() {
             No messages yet. Be the first!
           </p>
         ) : (
-          messages.map((msg) => (
-            <div key={msg.id} className="bg-accent rounded-lg px-4 py-2">
+          messages.map((msg, idx) => (
+            <div key={msg.id || idx} className="bg-accent rounded-lg px-4 py-2">
               <span className="font-medium text-primary">{msg.username}:</span>{' '}
               <span>{msg.text}</span>
             </div>

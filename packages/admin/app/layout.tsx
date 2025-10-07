@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Resource } from "sst";
+import { RealtimeProvider } from "@/lib/realtime-provider";
+import type { MqttConfig } from "@warsawjs/core/realtime";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,12 +26,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Server-side only: access SST Resources
+  const realtimeConfig: MqttConfig = {
+    endpoint: Resource.Realtime.endpoint,
+    authorizerToken: Resource.RealtimeAuthorizerToken.value,
+    appName: Resource.App.name,
+    stage: Resource.App.stage,
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <RealtimeProvider config={realtimeConfig}>
+            {children}
+          </RealtimeProvider>
+        </Providers>
       </body>
     </html>
   );
