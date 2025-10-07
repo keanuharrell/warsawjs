@@ -1,4 +1,4 @@
-import { AdminDashboard } from './components/admin-dashboard'
+import { AdminDashboard } from '../components/admin-dashboard'
 
 export default async function AdminPage() {
   // TODO: Check auth here

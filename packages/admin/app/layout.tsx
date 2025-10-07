@@ -5,6 +5,8 @@ import { Providers } from "./providers";
 import { Resource } from "sst";
 import { RealtimeProvider } from "@/lib/realtime-provider";
 import type { MqttConfig } from "@warsawjs/core/realtime";
+import { auth, login } from "./actions/auth.actions";
+import { redirect } from "next/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,11 +23,16 @@ export const metadata: Metadata = {
   description: "Control panel for WarsawJS live demo presentation",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await auth();
+
+  if (!user) {
+    await login();
+  }
   // Server-side only: access SST Resources
   const realtimeConfig: MqttConfig = {
     endpoint: Resource.Realtime.endpoint,

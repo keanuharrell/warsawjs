@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { useRealtimeTopic, useRealtimeConnection } from '@/lib/realtime'
 import type { ControlMessage } from '@warsawjs/core/realtime'
+import { logout } from '@/app/actions/auth.actions'
 
 export function AdminDashboard() {
   const [chatEnabled, setChatEnabled] = useState(false)
@@ -37,7 +38,7 @@ export function AdminDashboard() {
     }
     try {
       // Save state to database (web app has the API routes)
-      await fetch(`${process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'}/api/demo/state`, {
+      await fetch('/api/demo/state', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mode: 'chat', chatEnabled: true }),
@@ -106,12 +107,23 @@ export function AdminDashboard() {
                 Control panel for live demo
               </p>
             </div>
-            <Badge
-              variant="outline"
-              className={connected ? "text-green-600 border-green-600" : "text-red-600 border-red-600"}
-            >
-              {connected ? '✓ Connected' : '✗ Disconnected'}
-            </Badge>
+            <div className="flex items-center gap-3">
+              <Badge
+                variant="outline"
+                className={connected ? "text-green-600 border-green-600" : "text-red-600 border-red-600"}
+              >
+                {connected ? '✓ Connected' : '✗ Disconnected'}
+              </Badge>
+              <form action={logout}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  type="submit"
+                >
+                  Logout
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </header>
