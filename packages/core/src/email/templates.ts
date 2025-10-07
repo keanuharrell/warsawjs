@@ -1,6 +1,6 @@
 import { render } from "@react-email/render";
 import { AuthCode, Welcome } from "@askmyroom/email";
-import { DemoStarted } from "@warsawjs/email";
+import { DemoStarted, PresentationRecap } from "@warsawjs/email";
 import { EmailTemplate } from "./types";
 
 // Email template rendering functions
@@ -26,6 +26,14 @@ export const emailTemplates = {
   ): Promise<EmailTemplate> => ({
     subject: "🎉 WarsawJS Demo Session Started",
     html: await render(DemoStarted({ sessionId, publicUrl, adminUrl, timestamp })),
+  }),
+
+  presentationRecap: async (
+    recipientEmail: string,
+    presentationDate: string,
+  ): Promise<EmailTemplate> => ({
+    subject: "WarsawJS × SST - Presentation Recap & Resources",
+    html: await render(PresentationRecap({ recipientEmail, presentationDate })),
   }),
 
 };

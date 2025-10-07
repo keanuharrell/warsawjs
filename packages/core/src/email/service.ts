@@ -38,6 +38,20 @@ export class EmailService {
     await this.sender.send(email, template);
   }
 
+  // Presentation recap email
+  async sendPresentationRecap(
+    email: string,
+    presentationDate: string,
+  ): Promise<void> {
+    const template = await emailTemplates.presentationRecap(email, presentationDate);
+    await this.sender.send(email, template);
+  }
+
+  // Generic send method (for custom HTML)
+  async send(to: string, subject: string, html: string): Promise<void> {
+    await this.sender.send(to, { subject, html });
+  }
+
   // Method to replace sender (for production setup)
   setSender(sender: EmailSender): void {
     this.sender = sender;

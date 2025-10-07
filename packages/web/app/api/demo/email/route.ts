@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { emailService } from "@warsawjs/core";
-import { PresentationRecap } from "@warsawjs/email";
-import { render } from "@react-email/render";
 
 // POST /api/demo/email - Send recap email
 export async function POST(request: Request) {
@@ -32,20 +30,8 @@ export async function POST(request: Request) {
       day: 'numeric'
     });
 
-    // Render email template
-    const html = await render(
-      PresentationRecap({
-        recipientEmail: email,
-        presentationDate,
-      })
-    );
-
-    // Send email using SES
-    await emailService.send({
-      to: email,
-      subject: "WarsawJS × SST - Presentation Recap & Resources",
-      html,
-    });
+    // Send email using the emailService method
+    await emailService.sendPresentationRecap(email, presentationDate);
 
     return NextResponse.json({ success: true });
   } catch (error) {
