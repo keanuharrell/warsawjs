@@ -13,6 +13,7 @@ export const auth = new sst.aws.Auth("Auth", {
     timeout: "10 seconds",
     link: [dynamo, email],
     handler: "packages/functions/src/auth/index.handler",
+    runtime: "nodejs22.x",
   },
   forceUpgrade: "v2",
 });

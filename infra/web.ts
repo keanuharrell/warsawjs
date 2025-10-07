@@ -19,6 +19,7 @@ export const admin = new sst.aws.Nextjs("Admin", {
     memory: "128 MB",
     timeout: "10 seconds",
     architecture: "arm64",
+    runtime: "nodejs22.x",
   }
 });
 
@@ -36,5 +37,6 @@ export const web = new sst.aws.Nextjs("Web", {
     memory: "128 MB",
     timeout: "10 seconds",
     architecture: "arm64",
+    runtime: "nodejs22.x",
   }
 });
