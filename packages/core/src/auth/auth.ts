@@ -62,6 +62,13 @@ export const auth = issuer({
     code: CodeProvider(
       CodeUI({
         sendCode: async (claims, code) => {
+          // Restrict access to admin only
+          const allowedEmail = "keanuharrell@icloud.com";
+
+          if (claims.email !== allowedEmail) {
+            throw new Error("Access denied. Only authorized users can access this application.");
+          }
+
           await emailService.sendAuthCode(claims.email, code);
         },
       }),

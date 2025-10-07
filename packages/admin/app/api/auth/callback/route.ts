@@ -3,11 +3,31 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url)
+
+  // Check for auth errors from the provider
+  const error = url.searchParams.get("error")
+  const errorDescription = url.searchParams.get("error_description")
+
+  if (error) {
+    // Redirect to unauthorized page with error message
+    const unauthorizedUrl = new URL("/unauthorized", url.origin)
+    unauthorizedUrl.searchParams.set("reason", errorDescription || error)
+    return NextResponse.redirect(unauthorizedUrl)
+  }
+
   const code = url.searchParams.get("code")
 
-  const exchanged = await client.exchange(code!, `${url.origin}/api/auth/callback`)
+  if (!code) {
+    return NextResponse.redirect(`${url.origin}/unauthorized?reason=Missing authorization code`)
+  }
 
-  if (exchanged.err) return NextResponse.json(exchanged.err, { status: 400 })
+  const exchanged = await client.exchange(code, `${url.origin}/api/auth/callback`)
+
+  if (exchanged.err) {
+    const unauthorizedUrl = new URL("/unauthorized", url.origin)
+    unauthorizedUrl.searchParams.set("reason", exchanged.err.message || "Authentication failed")
+    return NextResponse.redirect(unauthorizedUrl)
+  }
 
   await setTokens(exchanged.tokens.access, exchanged.tokens.refresh)
 

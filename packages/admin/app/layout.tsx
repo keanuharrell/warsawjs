@@ -2,11 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Resource } from "sst";
-import { RealtimeProvider } from "@/lib/realtime-provider";
-import type { MqttConfig } from "@warsawjs/core/realtime";
-import { auth, login } from "./actions/auth.actions";
-import { redirect } from "next/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,37 +23,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await auth();
-
-  if (!user) {
-    await login();
-  }
-  // Server-side only: access SST Resources
-  const realtimeConfig: MqttConfig = {
-    endpoint: Resource.Realtime.endpoint,
-    authorizerToken: Resource.RealtimeAuthorizerToken.value,
-    authorizerName: Resource.Realtime.authorizer || 'RealtimeAuthorizer',
-    appName: Resource.App.name,
-    stage: Resource.App.stage,
-  };
-
-  console.log('[Layout] Realtime config:', {
-    endpoint: realtimeConfig.endpoint,
-    authorizerName: realtimeConfig.authorizerName,
-    appName: realtimeConfig.appName,
-    stage: realtimeConfig.stage,
-    hasToken: !!realtimeConfig.authorizerToken
-  });
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <RealtimeProvider config={realtimeConfig}>
-            {children}
-          </RealtimeProvider>
+          {children}
         </Providers>
       </body>
     </html>

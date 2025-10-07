@@ -3,12 +3,12 @@ import { createClient } from "@openauthjs/openauth/client"
 import { cookies as getCookies } from "next/headers"
 
 export const client = createClient({
-  clientID: "nextjs",
+  clientID: "admin",
   issuer: Resource.Auth.url
-})
+});
 
 export async function setTokens(access: string, refresh: string) {
-  const cookies = await getCookies()
+  const cookies = await getCookies();
 
   cookies.set({
     name: "access_token",
@@ -17,7 +17,7 @@ export async function setTokens(access: string, refresh: string) {
     sameSite: "lax",
     path: "/",
     maxAge: 34560000,
-  })
+  });
   cookies.set({
     name: "refresh_token",
     value: refresh,
@@ -25,5 +25,5 @@ export async function setTokens(access: string, refresh: string) {
     sameSite: "lax",
     path: "/",
     maxAge: 34560000,
-  })
+  });
 }
