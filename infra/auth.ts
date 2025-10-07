@@ -9,7 +9,7 @@ export const auth = new sst.aws.Auth("Auth", {
   },
   issuer: {
     architecture: "arm64",
-    memory: "128 MB",
+    memory: "512 MB",
     timeout: "10 seconds",
     link: [dynamo, email],
     handler: "packages/functions/src/auth/index.handler",
