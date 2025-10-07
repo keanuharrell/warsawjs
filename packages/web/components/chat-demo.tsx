@@ -5,13 +5,24 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRealtimeTopic } from '@/lib/realtime'
+import { useUsername } from '@/lib/use-username'
+import { UsernamePrompt } from './username-prompt'
 import type { ChatMessage } from '@warsawjs/core/realtime'
 
 export function ChatDemo() {
   const [message, setMessage] = useState('')
-  const [username] = useState(`User${Math.floor(Math.random() * 1000)}`)
+  const { username, isLoading, saveUsername, hasUsername } = useUsername()
 
   const { messages, publish } = useRealtimeTopic<ChatMessage>('chat')
+
+  // Show username prompt if no username is set
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-[400px]">Loading...</div>
+  }
+
+  if (!hasUsername) {
+    return <UsernamePrompt onSubmit={saveUsername} />
+  }
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,7 +53,12 @@ export function ChatDemo() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold mb-2">💬 Live Chat</h2>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-3xl font-bold">💬 Live Chat</h2>
+        <span className="text-sm text-muted-foreground">
+          Chatting as <span className="font-medium text-primary">{username}</span>
+        </span>
+      </div>
       <p className="text-lg text-muted-foreground mb-6">
         What&apos;s your favorite tech stack?
       </p>

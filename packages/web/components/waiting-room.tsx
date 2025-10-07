@@ -1,12 +1,16 @@
 'use client'
 
+import { useUsername } from '@/lib/use-username'
+
 export function WaitingRoom() {
+  const { username, hasUsername } = useUsername()
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] text-center">
       <div className="animate-pulse space-y-4">
         <h2 className="text-6xl font-bold">WarsawJS × SST</h2>
         <p className="text-2xl text-muted-foreground">
-          Waiting for presentation to start...
+          {hasUsername ? `Welcome, ${username}! ` : ''}Waiting for presentation to start...
         </p>
       </div>
 
