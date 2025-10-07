@@ -1,5 +1,5 @@
 import { RealtimeProvider } from '@/lib/realtime-provider'
-import { DemoClient } from './components/demo-client'
+import { DemoClient } from '@/components/demo-client'
 import { MqttConfig } from '@warsawjs/core';
 import { Resource } from 'sst';
 
