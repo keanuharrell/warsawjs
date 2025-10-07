@@ -31,7 +31,6 @@ export function AdminDashboard() {
   })
 
   const handleEnableChat = useCallback(async () => {
-    console.log('[Admin] Attempting to enable chat, connected:', connected)
     const message: ControlMessage = {
       action: 'enable_chat',
       timestamp: Date.now(),
@@ -45,9 +44,7 @@ export function AdminDashboard() {
       })
 
       // Publish to MQTT for real-time updates
-      console.log('[Admin] Publishing message:', message)
       await publish(message)
-      console.log('[Admin] Message published successfully')
       setChatEnabled(true)
     } catch (error) {
       console.error('[Admin] Failed to enable chat:', error)
@@ -61,7 +58,7 @@ export function AdminDashboard() {
     }
     try {
       // Save state to database
-      await fetch(`${process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'}/api/demo/state`, {
+      await fetch('/api/demo/state', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mode: 'vote', voteEnabled: true }),
@@ -82,7 +79,7 @@ export function AdminDashboard() {
     }
     try {
       // Reset database
-      await fetch(`${process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'}/api/demo/reset`, {
+      await fetch('/api/demo/reset', {
         method: 'POST',
       })
 

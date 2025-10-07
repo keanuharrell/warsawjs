@@ -1,5 +1,6 @@
 import { Entity } from "electrodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { Resource } from "sst";
 
 export const DemoStateEntity = new Entity(
   {
@@ -56,7 +57,7 @@ export const DemoStateEntity = new Entity(
       },
     },
   },
-  { table: process.env.TABLE_NAME || "", client: new DynamoDBClient({}) }
+  { table: Resource.Dynamo.name, client: new DynamoDBClient({}) }
 );
 
 export type DemoState = {
