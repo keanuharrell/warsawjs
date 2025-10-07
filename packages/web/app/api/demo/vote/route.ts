@@ -1,6 +1,20 @@
 import { NextResponse } from "next/server";
 import { VoteDB } from "@warsawjs/core";
 
+// GET /api/demo/vote - Get vote counts
+export async function GET() {
+  try {
+    const votes = await VoteDB.count();
+    return NextResponse.json({ votes });
+  } catch (error) {
+    console.error("[API] Failed to get votes:", error);
+    return NextResponse.json(
+      { error: "Failed to get votes" },
+      { status: 500 }
+    );
+  }
+}
+
 // POST /api/demo/vote - Save vote
 export async function POST(request: Request) {
   try {

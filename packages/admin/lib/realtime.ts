@@ -93,11 +93,8 @@ export const useRealtimeTopic = <T = unknown>(
     const client = getRealtimeClient(config)
     const topic = getTopic(topicType, config.appName, config.stage)
 
-    console.log(`[useRealtimeTopic] Publishing to ${topic}:`, data)
-
     try {
       await client.publish(topic, JSON.stringify(data))
-      console.log(`[useRealtimeTopic] Successfully published to ${topic}`)
     } catch (err) {
       console.error(`[useRealtimeTopic] Failed to publish to ${topic}:`, err)
       throw err

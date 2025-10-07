@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRealtimeTopic } from '@/lib/realtime'
 import type { VoteMessage } from '@warsawjs/core/realtime'
@@ -17,22 +17,39 @@ const options = [
 
 export function VoteDemo() {
   const [voted, setVoted] = useState(false)
+  const [userVote, setUserVote] = useState<VoteOption | null>(null)
   const [userId] = useState(() => `user_${Math.random().toString(36).substr(2, 9)}`)
+  const [initialVotes, setInitialVotes] = useState<VoteResults>({ A: 0, B: 0, C: 0, D: 0 })
+  const [loading, setLoading] = useState(true)
 
   const { messages, publish } = useRealtimeTopic<VoteMessage>('vote')
 
-  // Calculate results from all vote messages
+  // Load existing votes from database on mount
+  useEffect(() => {
+    fetch('/api/demo/vote')
+      .then(res => res.json())
+      .then(data => {
+        if (data.votes) {
+          setInitialVotes(data.votes)
+        }
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to load votes:', err)
+        setLoading(false)
+      })
+  }, [])
+
+  // Calculate results from initial votes + real-time messages
   const results = useMemo(() => {
-    const counts: VoteResults = { A: 0, B: 0, C: 0, D: 0 }
+    const counts: VoteResults = { ...initialVotes }
     messages.forEach((msg) => {
       counts[msg.option] = (counts[msg.option] || 0) + 1
     })
     return counts
-  }, [messages])
+  }, [messages, initialVotes])
 
   const handleVote = useCallback(async (optionId: VoteOption) => {
-    if (voted) return
-
     const voteMessage: VoteMessage = {
       option: optionId,
       userId,
@@ -40,7 +57,7 @@ export function VoteDemo() {
     }
 
     try {
-      // Save to database
+      // Save to database (upsert will update if already exists)
       await fetch('/api/demo/vote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -50,10 +67,11 @@ export function VoteDemo() {
       // Publish to MQTT for real-time updates
       await publish(voteMessage)
       setVoted(true)
+      setUserVote(optionId)
     } catch (error) {
       console.error('Failed to submit vote:', error)
     }
-  }, [voted, userId, publish])
+  }, [userId, publish])
 
   const total = Object.values(results).reduce((a, b) => a + b, 0)
   const percentage = (option: VoteOption) =>
@@ -73,8 +91,8 @@ export function VoteDemo() {
             <Button
               key={option.id}
               onClick={() => handleVote(option.id)}
-              disabled={voted}
-              variant="outline"
+              disabled={loading}
+              variant={userVote === option.id ? "default" : "outline"}
               className="w-full h-auto p-0 relative overflow-hidden"
             >
               <div
@@ -98,9 +116,14 @@ export function VoteDemo() {
       </div>
 
       {voted && (
-        <p className="text-center mt-6 text-green-600 font-medium">
-          ✓ Thanks for voting! Total votes: {total}
-        </p>
+        <div className="text-center mt-6">
+          <p className="text-green-600 font-medium">
+            ✓ Thanks for voting! Total votes: {total}
+          </p>
+          <p className="text-sm text-muted-foreground mt-2">
+            You can change your vote by clicking another option
+          </p>
+        </div>
       )}
     </div>
   )

@@ -56,8 +56,6 @@ export class RealtimeClient {
         // Build the WebSocket URL with custom authorizer
         const url = `wss://${this.config.endpoint}/mqtt?x-amz-customauthorizer-name=${this.config.authorizerName}`
 
-        console.log('[Realtime] Connecting to:', url)
-
         this.client = this.mqttFactory(url, {
           protocolVersion: 5,
           username: '', // Must be empty for custom authorizer
@@ -69,7 +67,6 @@ export class RealtimeClient {
 
         this.client.on('connect', () => {
           this.connecting = false
-          console.log('[Realtime] Connected to MQTT broker')
           resolve(this.client!)
         })
 
@@ -81,7 +78,6 @@ export class RealtimeClient {
 
         this.client.on('message', (topic: string, payload: Buffer) => {
           const message = payload.toString()
-          console.log('[Realtime] Received message on topic:', topic, message)
           const handlers = this.callbacks.get(topic)
           if (handlers) {
             handlers.forEach(handler => handler(message))
@@ -89,11 +85,11 @@ export class RealtimeClient {
         })
 
         this.client.on('reconnect', () => {
-          console.log('[Realtime] Reconnecting...')
+          // Reconnecting
         })
 
         this.client.on('close', () => {
-          console.log('[Realtime] Connection closed')
+          // Connection closed
         })
 
         this.client.on('offline', () => {
@@ -125,8 +121,6 @@ export class RealtimeClient {
           reject(error)
           return
         }
-
-        console.log(`[Realtime] Subscribed to ${topic}`)
 
         if (!this.callbacks.has(topic)) {
           this.callbacks.set(topic, new Set())
@@ -162,7 +156,6 @@ export class RealtimeClient {
             reject(error)
             return
           }
-          console.log(`[Realtime] Unsubscribed from ${topic}`)
           resolve()
         })
       })
@@ -179,7 +172,6 @@ export class RealtimeClient {
           reject(error)
           return
         }
-        console.log(`[Realtime] Published to ${topic}`)
         resolve()
       })
     })
@@ -190,7 +182,6 @@ export class RealtimeClient {
 
     return new Promise((resolve) => {
       this.client!.end(false, {}, () => {
-        console.log('[Realtime] Disconnected')
         this.client = null
         this.callbacks.clear()
         resolve()
