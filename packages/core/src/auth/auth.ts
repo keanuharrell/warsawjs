@@ -33,10 +33,11 @@ export async function getOrCreateUser(
 
     // Envoyer email de bienvenue pour nouveaux utilisateurs
     try {
+      const dashboardUrl = process.env.ADMIN_URL || "https://admin.warsawjs.keanuharrell.com";
       await emailService.sendWelcomeEmail(
         email,
         displayName,
-        "https://askmyroom.dev/dashboard" // TODO: Use actual dashboard URL from env
+        dashboardUrl
       );
     } catch (error) {
       console.error("Failed to send welcome email:", error);

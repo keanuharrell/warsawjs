@@ -15,7 +15,7 @@ interface LayoutProps {
   title?: string;
 }
 
-export function Layout({ children, title = "AskMyRoom" }: LayoutProps) {
+export function Layout({ children, title = "WarsawJS Live Demo" }: LayoutProps) {
   return (
     <Html>
       <Head>
@@ -25,7 +25,8 @@ export function Layout({ children, title = "AskMyRoom" }: LayoutProps) {
         <Container style={container}>
           {/* Header */}
           <Section style={header}>
-            <Text style={brandName}>AskMyRoom</Text>
+            <Text style={brandName}>WarsawJS × SST</Text>
+            <Text style={tagline}>Live Real-time Demo</Text>
           </Section>
 
           {/* Content */}
@@ -35,11 +36,15 @@ export function Layout({ children, title = "AskMyRoom" }: LayoutProps) {
           <Hr style={hr} />
           <Section style={footer}>
             <Text style={footerText}>
-              © {new Date().getFullYear()} AskMyRoom · Real-time audience engagement
+              © {new Date().getFullYear()} WarsawJS Demo · Powered by SST & AWS IoT Core
             </Text>
             <Text style={footerLinks}>
-              <Link href="https://askmyroom.dev" style={link}>
-                askmyroom.dev
+              <Link href="https://github.com/yourusername/warsawjs" style={link}>
+                View on GitHub
+              </Link>
+              {" · "}
+              <Link href="https://sst.dev" style={link}>
+                Built with SST
               </Link>
             </Text>
           </Section>
@@ -75,6 +80,13 @@ const brandName = {
   color: "#09090b",
   margin: "0",
   letterSpacing: "-0.025em",
+};
+
+const tagline = {
+  fontSize: "12px",
+  fontWeight: "400",
+  color: "#6b7280",
+  margin: "4px 0 0 0",
 };
 
 const content = {

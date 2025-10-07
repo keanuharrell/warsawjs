@@ -8,44 +8,43 @@ interface WelcomeProps {
 
 export function Welcome({ name, dashboardUrl }: WelcomeProps) {
   return (
-    <Layout title="Welcome to AskMyRoom">
-      <Text style={heading}>Welcome to AskMyRoom</Text>
+    <Layout title="Welcome to WarsawJS Admin">
+      <Text style={heading}>🎉 Welcome to WarsawJS Admin</Text>
 
       <Text style={text}>
         Hi {name},
       </Text>
 
       <Text style={text}>
-        Your account is ready! You can now create interactive rooms for real-time Q&A sessions,
-        polls, and audience feedback.
+        Your admin access is ready! You can now control the live demo for your WarsawJS presentation.
       </Text>
 
       <Section style={featuresContainer}>
         <Text style={featureItem}>
-          <span style={checkmark}>✓</span> Create rooms instantly with unique join codes
+          <span style={checkmark}>✓</span> Real-time control of chat and voting features
         </Text>
         <Text style={featureItem}>
-          <span style={checkmark}>✓</span> Real-time questions and voting
+          <span style={checkmark}>✓</span> Live monitoring of participants and activity
         </Text>
         <Text style={featureItem}>
-          <span style={checkmark}>✓</span> Live polls with instant results
+          <span style={checkmark}>✓</span> Instant demo reset capabilities
         </Text>
         <Text style={featureItem}>
-          <span style={checkmark}>✓</span> Audience feedback and ratings
+          <span style={checkmark}>✓</span> MQTT connection status monitoring
         </Text>
         <Text style={featureItem}>
-          <span style={checkmark}>✓</span> Moderation controls
+          <span style={checkmark}>✓</span> Session statistics and export
         </Text>
       </Section>
 
       <Section style={buttonContainer}>
         <Button href={dashboardUrl} style={button}>
-          Create your first room
+          Open Admin Dashboard
         </Button>
       </Section>
 
       <Text style={smallText}>
-        Questions? Just reply to this email and we'll help you get started.
+        This admin panel is for your WarsawJS presentation. Keep the URL secure!
       </Text>
     </Layout>
   );

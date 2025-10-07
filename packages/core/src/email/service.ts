@@ -26,47 +26,16 @@ export class EmailService {
     await this.sender.send(email, template);
   }
 
-  // Room-related emails
-  async sendRoomInvite(
-    recipientEmail: string,
-    roomTitle: string,
-    joinCode: string,
-    joinUrl: string,
-    hostName: string,
+  // Demo-related emails
+  async sendDemoStarted(
+    email: string,
+    sessionId: string,
+    publicUrl: string,
+    adminUrl: string,
+    timestamp: string,
   ): Promise<void> {
-    const template = await emailTemplates.roomInvite(
-      roomTitle,
-      joinCode,
-      joinUrl,
-      hostName,
-    );
-    await this.sender.send(recipientEmail, template);
-  }
-
-  async sendSessionSummary(
-    recipientEmail: string,
-    hostName: string,
-    roomTitle: string,
-    duration: string,
-    stats: {
-      totalParticipants: number;
-      totalQuestions: number;
-      totalPollResponses: number;
-      averageFeedback?: number;
-      topQuestions?: Array<{ text: string; votes: number }>;
-    }
-  ): Promise<void> {
-    const template = await emailTemplates.sessionSummary(
-      hostName,
-      roomTitle,
-      duration,
-      stats.totalParticipants,
-      stats.totalQuestions,
-      stats.totalPollResponses,
-      stats.averageFeedback,
-      stats.topQuestions,
-    );
-    await this.sender.send(recipientEmail, template);
+    const template = await emailTemplates.demoStarted(sessionId, publicUrl, adminUrl, timestamp);
+    await this.sender.send(email, template);
   }
 
   // Method to replace sender (for production setup)

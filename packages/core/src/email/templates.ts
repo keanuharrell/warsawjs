@@ -1,11 +1,12 @@
 import { render } from "@react-email/render";
-import { AuthCode, Welcome, RoomInvite, SessionSummary } from "@askmyroom/email";
+import { AuthCode, Welcome } from "@askmyroom/email";
+import { DemoStarted } from "@warsawjs/email/emails/demo-started";
 import { EmailTemplate } from "./types";
 
 // Email template rendering functions
 export const emailTemplates = {
   authCode: async (email: string, code: string): Promise<EmailTemplate> => ({
-    subject: "Your AskMyRoom login code",
+    subject: "🔐 Your WarsawJS Admin Login Code",
     html: await render(AuthCode({ email, code })),
   }),
 
@@ -13,49 +14,18 @@ export const emailTemplates = {
     name: string,
     dashboardUrl: string,
   ): Promise<EmailTemplate> => ({
-    subject: "Welcome to AskMyRoom!",
+    subject: "🎉 Welcome to WarsawJS Admin Panel",
     html: await render(Welcome({ name, dashboardUrl })),
   }),
 
-  roomInvite: async (
-    roomTitle: string,
-    joinCode: string,
-    joinUrl: string,
-    hostName: string,
+  demoStarted: async (
+    sessionId: string,
+    publicUrl: string,
+    adminUrl: string,
+    timestamp: string,
   ): Promise<EmailTemplate> => ({
-    subject: `You're invited to join: ${roomTitle}`,
-    html: await render(
-      RoomInvite({
-        roomTitle,
-        joinCode,
-        joinUrl,
-        hostName,
-      }),
-    ),
+    subject: "🎉 WarsawJS Demo Session Started",
+    html: await render(DemoStarted({ sessionId, publicUrl, adminUrl, timestamp })),
   }),
 
-  sessionSummary: async (
-    hostName: string,
-    roomTitle: string,
-    duration: string,
-    totalParticipants: number,
-    totalQuestions: number,
-    totalPollResponses: number,
-    averageFeedback?: number,
-    topQuestions?: Array<{ text: string; votes: number }>,
-  ): Promise<EmailTemplate> => ({
-    subject: `Session summary: ${roomTitle}`,
-    html: await render(
-      SessionSummary({
-        hostName,
-        roomTitle,
-        duration,
-        totalParticipants,
-        totalQuestions,
-        totalPollResponses,
-        averageFeedback,
-        topQuestions,
-      }),
-    ),
-  }),
 };

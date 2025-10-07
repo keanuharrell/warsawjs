@@ -8,11 +8,11 @@ interface AuthCodeProps {
 
 export function AuthCode({ email, code }: AuthCodeProps) {
   return (
-    <Layout title="Sign in to AskMyRoom">
-      <Text style={heading}>Sign in to AskMyRoom</Text>
+    <Layout title="Sign in to WarsawJS Admin">
+      <Text style={heading}>🔐 Admin Access Code</Text>
 
       <Text style={text}>
-        Enter this code to complete your sign in:
+        Welcome back! Enter this code to access the WarsawJS admin dashboard:
       </Text>
 
       <Section style={codeContainer}>
@@ -25,6 +25,7 @@ export function AuthCode({ email, code }: AuthCodeProps) {
 
       <Text style={smallText}>
         If you didn't request this code, you can safely ignore this email.
+        Only authorized users can access the admin panel.
       </Text>
     </Layout>
   );
