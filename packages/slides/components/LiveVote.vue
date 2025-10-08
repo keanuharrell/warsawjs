@@ -35,7 +35,7 @@ useMqttTopic<ControlMessage>('control', (message) => {
 // Load votes from API
 const loadVotes = async () => {
   try {
-    const domain = import.meta.env.VITE_DOMAIN || 'warsawjs.keanuharrell.com'
+    const domain = import.meta.env.VITE_DOMAIN
     const response = await fetch(`https://${domain}/api/demo/vote`)
     if (response.ok) {
       const data = await response.json()

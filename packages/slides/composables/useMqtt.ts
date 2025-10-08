@@ -14,82 +14,118 @@ export interface VoteMessage {
   timestamp: number
 }
 
-export function useMqttTopic<T>(topic: string) {
+// Singleton MQTT client
+let sharedClient: mqtt.MqttClient | null = null
+const connectionState = ref(false)
+
+function getOrCreateClient() {
+  if (sharedClient?.connected) {
+    return sharedClient
+  }
+
+  const endpoint = import.meta.env.VITE_IOT_ENDPOINT
+  const token = import.meta.env.VITE_IOT_TOKEN
+  const authorizerName = import.meta.env.VITE_IOT_AUTHORIZER
+
+  if (!endpoint || !token || !authorizerName) {
+    console.error('[MQTT] Missing configuration')
+    throw new Error('MQTT configuration missing')
+  }
+
+  const url = `wss://${endpoint}/mqtt?x-amz-customauthorizer-name=${authorizerName}`
+  const clientId = `slides_${Math.random().toString(36).substring(2, 15)}`
+
+  console.log('[MQTT] Creating shared client', { clientId })
+
+  sharedClient = mqtt.connect(url, {
+    protocolVersion: 5,
+    username: '',
+    password: token,
+    clientId,
+    reconnectPeriod: 5000,
+    connectTimeout: 30000,
+  })
+
+  sharedClient.on('connect', () => {
+    console.log('[MQTT] Shared client connected')
+    connectionState.value = true
+  })
+
+  sharedClient.on('error', (err) => {
+    console.error('[MQTT] Connection error:', err)
+    connectionState.value = false
+  })
+
+  sharedClient.on('close', () => {
+    console.log('[MQTT] Disconnected')
+    connectionState.value = false
+  })
+
+  return sharedClient
+}
+
+export function useMqttTopic<T>(topic: string, onMessage?: (data: T) => void) {
   const messages = ref<T[]>([])
-  const connected = ref(false)
+  const connected = ref(connectionState.value)
   let client: mqtt.MqttClient | null = null
 
   onMounted(() => {
-    const endpoint = import.meta.env.VITE_IOT_ENDPOINT
-    const token = import.meta.env.VITE_IOT_TOKEN
-    const authorizerName = import.meta.env.VITE_IOT_AUTHORIZER
     const appName = import.meta.env.VITE_APP_NAME
     const stage = import.meta.env.VITE_STAGE
-
-    console.log('[MQTT] Environment check:', {
-      endpoint,
-      token: token ? `${token.substring(0, 10)}...` : 'missing',
-      authorizerName,
-      allEnvKeys: Object.keys(import.meta.env).filter(k => k.startsWith('VITE_'))
-    })
-
-    if (!endpoint || !token || !authorizerName) {
-      console.error('[MQTT] Missing configuration', { endpoint, token: token ? 'present' : 'missing', authorizerName })
-      return
-    }
-
     const topicPath = `${appName}/${stage}/${topic}`
-    const url = `wss://${endpoint}/mqtt?x-amz-customauthorizer-name=${authorizerName}`
-    const clientId = `slides_${Math.random().toString(36).substring(2, 15)}`
 
-    console.log('[MQTT] Connecting with', { url, topicPath, clientId, protocolVersion: 5 })
+    try {
+      client = getOrCreateClient()
 
-    client = mqtt.connect(url, {
-      protocolVersion: 5,
-      username: '',
-      password: token,
-      clientId,
-      reconnectPeriod: 5000,
-      connectTimeout: 30000,
-    })
-
-    client.on('connect', () => {
-      console.log(`[MQTT] Connected to ${topicPath}`)
-      connected.value = true
-      client?.subscribe(topicPath, (err) => {
-        if (err) {
-          console.error(`[MQTT] Subscribe error:`, err)
-        } else {
-          console.log(`[MQTT] Subscribed to ${topicPath}`)
+      const handleMessage = (_topic: string, payload: Buffer) => {
+        if (_topic === topicPath) {
+          try {
+            const message = JSON.parse(payload.toString()) as T
+            // @ts-ignore - Vue ref typing issue with generics
+            messages.value.push(message)
+            onMessage?.(message)
+          } catch (err) {
+            console.error('[MQTT] Parse error:', err)
+          }
         }
-      })
-    })
-
-    client.on('message', (_topic, payload) => {
-      try {
-        const message = JSON.parse(payload.toString()) as T
-        messages.value.push(message)
-      } catch (err) {
-        console.error('[MQTT] Parse error:', err)
       }
-    })
 
-    client.on('error', (err) => {
-      console.error('[MQTT] Connection error:', err)
-      connected.value = false
-    })
+      client.on('message', handleMessage)
 
-    client.on('close', () => {
-      console.log('[MQTT] Disconnected')
-      connected.value = false
-    })
+      client.on('connect', () => {
+        connected.value = true
+        client?.subscribe(topicPath, (err) => {
+          if (err) {
+            console.error(`[MQTT] Subscribe error:`, err)
+          } else {
+            console.log(`[MQTT] Subscribed to ${topicPath}`)
+          }
+        })
+      })
+
+      // If already connected, subscribe immediately
+      if (client.connected) {
+        connected.value = true
+        client.subscribe(topicPath, (err) => {
+          if (err) {
+            console.error(`[MQTT] Subscribe error:`, err)
+          } else {
+            console.log(`[MQTT] Subscribed to ${topicPath}`)
+          }
+        })
+      }
+    } catch (error) {
+      console.error('[MQTT] Failed to setup topic:', error)
+    }
   })
 
   onUnmounted(() => {
-    if (client) {
-      client.end()
-    }
+    // Don't close shared client on unmount
   })
 
-  return { messages, connected }
+  const clearMessages = () => {
+    messages.value = []
+  }
+
+  return { messages, connected, clearMessages }
 }
