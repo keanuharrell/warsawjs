@@ -18,15 +18,6 @@ interface DemoClientProps {
   initialVotes: VoteResults
 }
 
-// Map step IDs to components
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const STEP_COMPONENTS: Record<StepId, React.ComponentType<any>> = {
-  waiting: WaitingRoom,
-  chat: ChatDemo,
-  vote: VoteDemo,
-  email: EmailDemo,
-}
-
 export function DemoClient({
   initialMode = 'waiting',
   initialMessages,
@@ -62,32 +53,35 @@ export function DemoClient({
     return <UsernamePrompt onSubmit={saveUsername} />
   }
 
-  // Get the current component
-  const CurrentComponent = STEP_COMPONENTS[mode]
-
-  // Props for each component type
-  const componentProps = {
-    chat: { initialMessages },
-    vote: { initialVotes },
-    email: {},
-    waiting: {},
+  // Render the appropriate component based on mode with proper typing
+  const renderStep = () => {
+    switch (mode) {
+      case 'waiting':
+        return <WaitingRoom />
+      case 'chat':
+        return <ChatDemo initialMessages={initialMessages} />
+      case 'vote':
+        return <VoteDemo initialVotes={initialVotes} />
+      case 'email':
+        return <EmailDemo />
+    }
   }
 
   return (
     <>
-      <CurrentComponent {...(componentProps[mode] || {})} />
+      {renderStep()}
 
       {/* Debug controls - only in development */}
       {process.env.NODE_ENV === 'development' && (
         <Card className="fixed bottom-4 right-4 p-4">
           <p className="text-xs text-muted-foreground mb-2">Debug:</p>
           <div className="flex gap-2">
-            {Object.keys(STEP_COMPONENTS).map((stepId) => (
+            {(['waiting', 'chat', 'vote', 'email'] as const).map((stepId) => (
               <Button
                 key={stepId}
                 variant="outline"
                 size="sm"
-                onClick={() => setMode(stepId as StepId)}
+                onClick={() => setMode(stepId)}
               >
                 {stepId}
               </Button>
