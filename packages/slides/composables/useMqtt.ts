@@ -20,22 +20,37 @@ export function useMqttTopic<T>(topic: string) {
   let client: mqtt.MqttClient | null = null
 
   onMounted(() => {
-    const endpoint = import.meta.env.PUBLIC_REALTIME_ENDPOINT
-    const token = import.meta.env.PUBLIC_REALTIME_TOKEN
-    const authorizerName = import.meta.env.PUBLIC_REALTIME_AUTHORIZER
-    const appName = import.meta.env.PUBLIC_APP_NAME || 'warsawjs'
-    const stage = import.meta.env.PUBLIC_STAGE || 'dev'
+    const endpoint = import.meta.env.VITE_IOT_ENDPOINT
+    const token = import.meta.env.VITE_IOT_TOKEN
+    const authorizerName = import.meta.env.VITE_IOT_AUTHORIZER
+    const appName = import.meta.env.VITE_APP_NAME
+    const stage = import.meta.env.VITE_STAGE
 
-    if (!endpoint || !token) {
-      console.error('[MQTT] Missing configuration')
+    console.log('[MQTT] Environment check:', {
+      endpoint,
+      token: token ? `${token.substring(0, 10)}...` : 'missing',
+      authorizerName,
+      allEnvKeys: Object.keys(import.meta.env).filter(k => k.startsWith('VITE_'))
+    })
+
+    if (!endpoint || !token || !authorizerName) {
+      console.error('[MQTT] Missing configuration', { endpoint, token: token ? 'present' : 'missing', authorizerName })
       return
     }
 
     const topicPath = `${appName}/${stage}/${topic}`
+    const url = `wss://${endpoint}/mqtt?x-amz-customauthorizer-name=${authorizerName}`
+    const clientId = `slides_${Math.random().toString(36).substring(2, 15)}`
 
-    client = mqtt.connect(endpoint, {
+    console.log('[MQTT] Connecting with', { url, topicPath, clientId, protocolVersion: 5 })
+
+    client = mqtt.connect(url, {
       protocolVersion: 5,
-      username: `${authorizerName}?token=${token}`,
+      username: '',
+      password: token,
+      clientId,
+      reconnectPeriod: 5000,
+      connectTimeout: 30000,
     })
 
     client.on('connect', () => {

@@ -137,6 +137,8 @@ You tell the emotional story verbally
 layout: statement
 ---
 
+<MqttStatus />
+
 # Then I Discovered SST
 
 <v-click>

@@ -7,7 +7,7 @@ const props = defineProps<{
   size?: number
 }>()
 
-const domain = import.meta.env.PUBLIC_DOMAIN || 'warsawjs.keanuharrell.com'
+const domain = import.meta.env.VITE_DOMAIN || 'warsawjs.keanuharrell.com'
 const qrUrl = computed(() => props.url || `https://${domain}`)
 const qrSize = computed(() => props.size || 192)
 </script>

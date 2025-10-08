@@ -1,4 +1,6 @@
 import { domain } from "./dns";
+import { realtime } from "./realtime";
+import { realtimeReadOnlyToken, realtimeWriteToken } from "./secrets";
 
 export const slides = new sst.aws.StaticSite("Slides", {
   domain: {
@@ -14,6 +16,11 @@ export const slides = new sst.aws.StaticSite("Slides", {
   },
   path: "packages/slides",
   environment: {
-    PUBLIC_DOMAIN: domain,
-  }
+    VITE_DOMAIN: domain,
+    VITE_IOT_TOKEN: realtimeReadOnlyToken.value,
+    VITE_IOT_ENDPOINT: realtime.endpoint,
+    VITE_IOT_AUTHORIZER: realtime.authorizer,
+    VITE_APP_NAME: $app.name,
+    VITE_STAGE: $app.stage,
+  },
 });

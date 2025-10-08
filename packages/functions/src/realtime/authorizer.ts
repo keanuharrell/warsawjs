@@ -33,9 +33,10 @@ export const handler = realtime.authorizer(async (token) => {
   // Check for read-only token (public access for slides/viewers)
   if (token === Resource.RealtimeReadOnlyToken.value) {
     console.log('[Authorizer] Read-only access granted');
-    // Read-only: can only subscribe
+    // Read-only: can subscribe to everything, but publish only to a dummy topic
+    // AWS IoT Core MQTT requires at least one publish permission for connection stability
     return {
-      publish: [],
+      publish: [`${prefix}/_readonly_dummy`],
       subscribe: [`${prefix}/*`],
     };
   }
