@@ -11,10 +11,10 @@ interface ControlMessage {
 }
 
 const options = [
-  { id: 'A' as const, text: 'IAM Permissions 🔐', color: '#3b82f6' },
-  { id: 'B' as const, text: 'Understanding the Bill 💸', color: '#10b981' },
-  { id: 'C' as const, text: 'Finding the Right Service 🔍', color: '#f59e0b' },
-  { id: 'D' as const, text: 'All of the Above 😅', color: '#ef4444' },
+  { id: 'A' as const, label: 'A', text: 'IAM Permissions', emoji: '🔐', color: '#3b82f6' },
+  { id: 'B' as const, label: 'B', text: 'The Bill', emoji: '💸', color: '#10b981' },
+  { id: 'C' as const, label: 'C', text: 'Finding Services', emoji: '🔍', color: '#f59e0b' },
+  { id: 'D' as const, label: 'D', text: 'All of the Above', emoji: '😅', color: '#ef4444' },
 ]
 
 const { connected } = useMqttTopic('vote')
@@ -27,7 +27,6 @@ useMqttTopic<ControlMessage>('control', (message) => {
   if (message.action === 'reset') {
     console.log('[LiveVote] Reset received, clearing votes')
     votes.value = { A: 0, B: 0, C: 0, D: 0 }
-    // Reload from API in case there are any votes
     loadVotes()
   }
 })
@@ -49,10 +48,7 @@ const loadVotes = async () => {
 }
 
 onMounted(async () => {
-  // Load initial votes
   await loadVotes()
-
-  // Poll every 2 seconds for updates
   pollInterval = setInterval(loadVotes, 2000)
 })
 
@@ -70,88 +66,102 @@ const percentage = (option: VoteOption) => {
   if (total.value === 0) return 0
   return Math.round((votes.value[option] / total.value) * 100)
 }
+
+const winner = computed(() => {
+  if (total.value === 0) return null
+  const maxVotes = Math.max(...Object.values(votes.value))
+  return options.find(opt => votes.value[opt.id] === maxVotes)
+})
 </script>
 
 <template>
   <div class="live-vote">
     <div class="header">
-      <h3>🗳️ Live Poll Results</h3>
-      <span class="status" :class="{ connected }">
-        {{ connected ? '● Live' : '○ Connecting' }}
-      </span>
+      <div class="title-section">
+        <h3>🗳️ What's the hardest part of AWS?</h3>
+        <div class="meta">
+          <span class="total-votes">{{ total }} votes</span>
+          <span class="status" :class="{ connected }">
+            {{ connected ? '● Live' : '○ Connecting' }}
+          </span>
+        </div>
+      </div>
     </div>
 
-    <div class="question">
-      What's the hardest part of AWS?
-    </div>
-
-    <div class="results">
+    <div class="results-grid">
       <div
         v-for="option in options"
         :key="option.id"
-        class="option"
+        class="vote-card"
+        :class="{ winner: winner?.id === option.id && total > 0 }"
       >
-        <div class="option-label">
-          <span class="option-id">{{ option.id }}</span>
-          <span class="option-text">{{ option.text }}</span>
+        <div class="card-header">
+          <span class="option-emoji">{{ option.emoji }}</span>
+          <span class="option-label">{{ option.label }}</span>
         </div>
 
-        <div class="bar-container">
+        <div class="card-body">
+          <div class="percentage-display" :style="{ color: option.color }">
+            {{ percentage(option.id) }}%
+          </div>
+          <div class="option-text">{{ option.text }}</div>
+          <div class="vote-count">{{ votes[option.id] }} votes</div>
+        </div>
+
+        <div class="progress-bar">
           <div
-            class="bar"
+            class="progress-fill"
             :style="{
               width: `${percentage(option.id)}%`,
               backgroundColor: option.color,
             }"
           />
         </div>
-
-        <div class="stats">
-          <span class="percentage">{{ percentage(option.id) }}%</span>
-          <span class="count">({{ votes[option.id] }})</span>
-        </div>
       </div>
-    </div>
-
-    <div class="total">
-      Total votes: {{ total }}
     </div>
   </div>
 </template>
 
 <style scoped>
 .live-vote {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(40, 20, 60, 0.9));
-  border-radius: 12px;
-  padding: 2rem;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(30, 20, 50, 0.9));
+  border-radius: 16px;
+  padding: 1.5rem;
   color: white;
   border: 1px solid rgba(168, 85, 247, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid rgba(168, 85, 247, 0.3);
 }
 
-.header h3 {
-  margin: 0;
-  font-size: 1.8rem;
+.title-section h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.4rem;
   font-weight: 700;
+  color: #e5e7eb;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.total-votes {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  font-weight: 500;
 }
 
 .status {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #6b7280;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.05);
   font-weight: 600;
-  transition: all 0.3s ease;
 }
 
 .status.connected {
@@ -160,77 +170,95 @@ const percentage = (option: VoteOption) => {
   animation: pulse 2s ease-in-out infinite;
 }
 
-.question {
-  font-size: 1.3rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  color: #e5e7eb;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
 
-.results {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.option {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.vote-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-radius: 12px;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
-  transition: transform 0.2s ease, background 0.2s ease;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.option:hover {
-  transform: translateX(5px);
-  background: rgba(255, 255, 255, 0.05);
+.vote-card.winner {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  transform: scale(1.02);
+}
+
+.vote-card.winner::before {
+  content: '👑';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 1.2rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.option-emoji {
+  font-size: 1.8rem;
 }
 
 .option-label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.option-id {
+  font-size: 1.2rem;
   font-weight: bold;
-  font-size: 1.5rem;
   color: #a855f7;
-  min-width: 2rem;
-  text-align: center;
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   background: rgba(168, 85, 247, 0.2);
   border-radius: 6px;
 }
 
+.card-body {
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.percentage-display {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
 .option-text {
-  font-size: 1.1rem;
-  color: #e5e7eb;
-  font-weight: 500;
+  font-size: 0.95rem;
+  color: #d1d5db;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
-.bar-container {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+.vote-count {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
   overflow: hidden;
-  position: relative;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.bar {
+.progress-fill {
   height: 100%;
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 8px;
   position: relative;
-  overflow: hidden;
 }
 
-.bar::after {
+.progress-fill::after {
   content: '';
   position: absolute;
   top: 0;
@@ -240,38 +268,10 @@ const percentage = (option: VoteOption) => {
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.3) 50%,
     rgba(255, 255, 255, 0) 100%
   );
   animation: shimmer 2s infinite;
-}
-
-.stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1rem;
-}
-
-.percentage {
-  font-weight: bold;
-  color: #a855f7;
-  font-size: 1.3rem;
-}
-
-.count {
-  color: #9ca3af;
-  font-size: 0.95rem;
-}
-
-.total {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 2px solid rgba(168, 85, 247, 0.2);
-  color: #d1d5db;
-  font-size: 1.1rem;
-  font-weight: 600;
 }
 
 @keyframes pulse {
@@ -289,6 +289,15 @@ const percentage = (option: VoteOption) => {
   }
   100% {
     transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 </style>

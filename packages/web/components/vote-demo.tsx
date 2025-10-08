@@ -19,11 +19,32 @@ interface VoteDemoProps {
   initialVotes: VoteResults
 }
 
+const VOTE_STORAGE_KEY = 'warsawjs_user_vote'
+const USER_ID_STORAGE_KEY = 'warsawjs_user_id'
+
 export function VoteDemo({ initialVotes }: VoteDemoProps) {
-  const [voted, setVoted] = useState(false)
-  const [userVote, setUserVote] = useState<VoteOption | null>(null)
+  // Get or create persistent userId from localStorage
+  const [userId] = useState(() => {
+    if (typeof window === 'undefined') return ''
+    const stored = localStorage.getItem(USER_ID_STORAGE_KEY)
+    if (stored) return stored
+    const newId = `user_${Math.random().toString(36).substr(2, 9)}`
+    localStorage.setItem(USER_ID_STORAGE_KEY, newId)
+    return newId
+  })
+
+  // Check if user already voted (from localStorage)
+  const [voted, setVoted] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return !!localStorage.getItem(VOTE_STORAGE_KEY)
+  })
+
+  const [userVote, setUserVote] = useState<VoteOption | null>(() => {
+    if (typeof window === 'undefined') return null
+    return (localStorage.getItem(VOTE_STORAGE_KEY) as VoteOption) || null
+  })
+
   const [isVoting, setIsVoting] = useState(false)
-  const [userId] = useState(() => `user_${Math.random().toString(36).substr(2, 9)}`)
 
   const { messages, publish } = useRealtimeTopic<VoteMessage>('vote')
 
@@ -57,6 +78,10 @@ export function VoteDemo({ initialVotes }: VoteDemoProps) {
 
       // Publish to MQTT for real-time updates
       await publish(voteMessage)
+
+      // Save to localStorage to persist vote across refreshes
+      localStorage.setItem(VOTE_STORAGE_KEY, optionId)
+
       setVoted(true)
       setUserVote(optionId)
     } catch (error) {

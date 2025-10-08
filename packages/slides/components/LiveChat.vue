@@ -45,30 +45,43 @@ const totalMessages = computed(() => messages.value.length)
 
 <template>
   <div class="live-chat">
-    <div class="header">
-      <h3>💬 Live Chat</h3>
-      <div class="header-info">
-        <span class="count">{{ totalMessages }} messages</span>
-        <span class="status" :class="{ connected }">
-          {{ connected ? '● Live' : '○ Connecting' }}
-        </span>
+    <div class="info-panel">
+      <div class="panel-content">
+        <h3>💬 Live Chat</h3>
+        <p class="description">
+          Type your <strong>favorite tech stack</strong> in the chat!
+        </p>
+
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value">{{ totalMessages }}</div>
+            <div class="stat-label">Messages</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon" :class="{ connected }">
+              {{ connected ? '●' : '○' }}
+            </div>
+            <div class="stat-label">{{ connected ? 'Live' : 'Connecting' }}</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div ref="messagesContainer" class="messages">
-      <div
-        v-for="(msg, idx) in displayMessages"
-        :key="msg.id || idx"
-        class="message"
-      >
-        <span class="username">{{ msg.username }}</span>
-        <span class="text">{{ msg.text }}</span>
-      </div>
+    <div class="messages-panel">
+      <div ref="messagesContainer" class="messages">
+        <div
+          v-for="(msg, idx) in displayMessages"
+          :key="msg.id || idx"
+          class="message"
+        >
+          <span class="username">{{ msg.username }}</span>
+          <span class="text">{{ msg.text }}</span>
+        </div>
 
-      <div v-if="displayMessages.length === 0" class="empty">
-        <div class="empty-icon">💬</div>
-        <div>Waiting for messages...</div>
-        <div class="empty-hint">Messages will appear here in real-time</div>
+        <div v-if="displayMessages.length === 0" class="empty">
+          <div class="empty-icon">💬</div>
+          <div>Waiting for messages...</div>
+        </div>
       </div>
     </div>
   </div>
@@ -76,58 +89,97 @@ const totalMessages = computed(() => messages.value.length)
 
 <style scoped>
 .live-chat {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 40, 0.9));
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
+  min-height: 400px;
+}
+
+.info-panel {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(96, 165, 250, 0.05));
   border-radius: 12px;
   padding: 1.5rem;
   color: white;
-  max-height: 500px;
+  border: 2px solid rgba(96, 165, 250, 0.3);
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(96, 165, 250, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.header {
+.panel-content {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.header h3 {
+.info-panel h3 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #e5e7eb;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #d1d5db;
+  margin: 0;
+}
+
+.description strong {
+  color: #60a5fa;
   font-weight: 700;
 }
 
-.header-info {
+.stats {
   display: flex;
-  gap: 1rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(96, 165, 250, 0.2);
 }
 
-.count {
-  font-size: 0.9rem;
-  color: #9ca3af;
-  font-weight: 500;
+.stat-item {
+  text-align: center;
 }
 
-.status {
-  font-size: 0.9rem;
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #60a5fa;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.stat-icon {
+  font-size: 2rem;
   color: #6b7280;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 0.25rem;
   transition: all 0.3s ease;
 }
 
-.status.connected {
+.stat-icon.connected {
   color: #4ade80;
-  background: rgba(74, 222, 128, 0.1);
   animation: pulse 2s ease-in-out infinite;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.messages-panel {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 40, 0.9));
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
 }
 
 .messages {
@@ -186,18 +238,13 @@ const totalMessages = computed(() => messages.value.length)
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
+  margin: auto;
 }
 
 .empty-icon {
   font-size: 3rem;
   opacity: 0.5;
   animation: float 3s ease-in-out infinite;
-}
-
-.empty-hint {
-  font-size: 0.85rem;
-  opacity: 0.6;
-  font-style: italic;
 }
 
 @keyframes slideIn {

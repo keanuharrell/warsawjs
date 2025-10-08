@@ -16,68 +16,99 @@ export interface VoteMessage {
 
 // Singleton MQTT client
 let sharedClient: mqtt.MqttClient | null = null
+let isCreatingClient = false
 const connectionState = ref(false)
 
 function getOrCreateClient() {
+  // Return existing connected client
   if (sharedClient?.connected) {
     return sharedClient
   }
 
-  const endpoint = import.meta.env.VITE_IOT_ENDPOINT
-  const token = import.meta.env.VITE_IOT_TOKEN
-  const authorizerName = import.meta.env.VITE_IOT_AUTHORIZER
-
-  if (!endpoint || !token || !authorizerName) {
-    console.error('[MQTT] Missing configuration')
-    throw new Error('MQTT configuration missing')
+  // Return existing client even if disconnected (will auto-reconnect)
+  if (sharedClient) {
+    return sharedClient
   }
 
-  const url = `wss://${endpoint}/mqtt?x-amz-customauthorizer-name=${authorizerName}`
-  const clientId = `slides_${Math.random().toString(36).substring(2, 15)}`
+  // Prevent race condition: block concurrent creation attempts
+  if (isCreatingClient) {
+    throw new Error('MQTT client is already being created')
+  }
 
-  console.log('[MQTT] Creating shared client', { clientId })
+  isCreatingClient = true
 
-  sharedClient = mqtt.connect(url, {
-    protocolVersion: 5,
-    username: '',
-    password: token,
-    clientId,
-    reconnectPeriod: 5000,
-    connectTimeout: 30000,
-  })
+  try {
+    const endpoint = import.meta.env.VITE_IOT_ENDPOINT
+    const token = import.meta.env.VITE_IOT_TOKEN
+    const authorizerName = import.meta.env.VITE_IOT_AUTHORIZER
 
-  sharedClient.on('connect', () => {
-    console.log('[MQTT] Shared client connected')
-    connectionState.value = true
-  })
+    if (!endpoint || !token || !authorizerName) {
+      console.error('[MQTT] Missing configuration', {
+        hasEndpoint: !!endpoint,
+        hasToken: !!token,
+        hasAuthorizer: !!authorizerName
+      })
+      throw new Error('MQTT configuration missing - check VITE_IOT_* environment variables')
+    }
 
-  sharedClient.on('error', (err) => {
-    console.error('[MQTT] Connection error:', err)
-    connectionState.value = false
-  })
+    const url = `wss://${endpoint}/mqtt?x-amz-customauthorizer-name=${authorizerName}`
+    const clientId = `slides_${Math.random().toString(36).substring(2, 15)}`
 
-  sharedClient.on('close', () => {
-    console.log('[MQTT] Disconnected')
-    connectionState.value = false
-  })
+    console.log('[MQTT] Creating shared client', { clientId })
 
-  return sharedClient
+    sharedClient = mqtt.connect(url, {
+      protocolVersion: 5,
+      username: '',
+      password: token,
+      clientId,
+      reconnectPeriod: 5000,
+      connectTimeout: 30000,
+    })
+
+    sharedClient.on('connect', () => {
+      console.log('[MQTT] Shared client connected')
+      connectionState.value = true
+    })
+
+    sharedClient.on('error', (err) => {
+      console.error('[MQTT] Connection error:', err)
+      connectionState.value = false
+    })
+
+    sharedClient.on('close', () => {
+      console.log('[MQTT] Disconnected')
+      connectionState.value = false
+    })
+
+    return sharedClient
+  } finally {
+    isCreatingClient = false
+  }
 }
 
 export function useMqttTopic<T>(topic: string, onMessage?: (data: T) => void) {
   const messages = ref<T[]>([])
   const connected = ref(connectionState.value)
   let client: mqtt.MqttClient | null = null
+  let handleMessage: ((topic: string, payload: Buffer) => void) | null = null
+  let handleConnect: (() => void) | null = null
 
   onMounted(() => {
     const appName = import.meta.env.VITE_APP_NAME
     const stage = import.meta.env.VITE_STAGE
+
+    if (!appName || !stage) {
+      console.error('[MQTT] Missing app configuration', { appName, stage })
+      return
+    }
+
     const topicPath = `${appName}/${stage}/${topic}`
 
     try {
       client = getOrCreateClient()
 
-      const handleMessage = (_topic: string, payload: Buffer) => {
+      // Create message handler
+      handleMessage = (_topic: string, payload: Buffer) => {
         if (_topic === topicPath) {
           try {
             const message = JSON.parse(payload.toString()) as T
@@ -90,9 +121,8 @@ export function useMqttTopic<T>(topic: string, onMessage?: (data: T) => void) {
         }
       }
 
-      client.on('message', handleMessage)
-
-      client.on('connect', () => {
+      // Create connect handler
+      handleConnect = () => {
         connected.value = true
         client?.subscribe(topicPath, (err) => {
           if (err) {
@@ -101,7 +131,11 @@ export function useMqttTopic<T>(topic: string, onMessage?: (data: T) => void) {
             console.log(`[MQTT] Subscribed to ${topicPath}`)
           }
         })
-      })
+      }
+
+      // Attach event listeners
+      client.on('message', handleMessage)
+      client.on('connect', handleConnect)
 
       // If already connected, subscribe immediately
       if (client.connected) {
@@ -120,7 +154,14 @@ export function useMqttTopic<T>(topic: string, onMessage?: (data: T) => void) {
   })
 
   onUnmounted(() => {
-    // Don't close shared client on unmount
+    // Clean up event listeners to prevent memory leaks
+    if (client && handleMessage) {
+      client.off('message', handleMessage)
+    }
+    if (client && handleConnect) {
+      client.off('connect', handleConnect)
+    }
+    // Don't close shared client on unmount - other components may still use it
   })
 
   const clearMessages = () => {
