@@ -9,10 +9,10 @@ type VoteOption = 'A' | 'B' | 'C' | 'D'
 type VoteResults = Record<VoteOption, number>
 
 const options = [
-  { id: 'A' as const, text: 'IAM Permissions 🔐' },
-  { id: 'B' as const, text: 'Understanding the Bill 💸' },
-  { id: 'C' as const, text: 'Finding the Right Service 🔍' },
-  { id: 'D' as const, text: 'All of the Above 😅' },
+  { id: 'A' as const, text: 'rm -rf node_modules 💀' },
+  { id: 'B' as const, text: 'Git merge conflicts 🔥' },
+  { id: 'C' as const, text: '"Works on my machine" 🤷' },
+  { id: 'D' as const, text: 'Production on Friday 😱' },
 ]
 
 interface VoteDemoProps {
@@ -107,8 +107,8 @@ export function VoteDemo({ initialVotes }: VoteDemoProps) {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold mb-2">🗳️ Live Poll</h2>
-      <p className="text-xl mb-8">What&apos;s the hardest part of AWS?</p>
+      <h2 className="text-3xl font-bold mb-2">😰 Live Poll</h2>
+      <p className="text-xl mb-8">What scares you the most?</p>
 
       <div className="space-y-4">
         {options.map((option) => {

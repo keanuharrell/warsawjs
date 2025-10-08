@@ -11,10 +11,10 @@ interface ControlMessage {
 }
 
 const options = [
-  { id: 'A' as const, label: 'A', text: 'IAM Permissions', emoji: '🔐', color: '#3b82f6' },
-  { id: 'B' as const, label: 'B', text: 'The Bill', emoji: '💸', color: '#10b981' },
-  { id: 'C' as const, label: 'C', text: 'Finding Services', emoji: '🔍', color: '#f59e0b' },
-  { id: 'D' as const, label: 'D', text: 'All of the Above', emoji: '😅', color: '#ef4444' },
+  { id: 'A' as const, label: 'A', text: 'rm -rf node_modules', emoji: '💀', color: '#3b82f6' },
+  { id: 'B' as const, label: 'B', text: 'Git merge conflicts', emoji: '🔥', color: '#10b981' },
+  { id: 'C' as const, label: 'C', text: '"Works on my machine"', emoji: '🤷', color: '#f59e0b' },
+  { id: 'D' as const, label: 'D', text: 'Production on Friday', emoji: '😱', color: '#ef4444' },
 ]
 
 const { connected } = useMqttTopic('vote')
@@ -78,7 +78,7 @@ const winner = computed(() => {
   <div class="live-vote">
     <div class="vote-header">
       <div class="title-section">
-        <h3>🗳️ What's the hardest part of AWS?</h3>
+        <h3>😰 What scares you the most?</h3>
         <div class="meta-stats">
           <span class="total-votes">{{ total }} votes</span>
           <span class="status" :class="{ connected }">
