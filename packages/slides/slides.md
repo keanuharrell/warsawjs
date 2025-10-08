@@ -38,7 +38,7 @@ class: text-center
 <v-click>
 
 ## Keanu Harrell
-🇫🇷🇺🇸 French-American · Based in Warsaw
+📍 Based in Warsaw
 
 </v-click>
 
@@ -141,66 +141,13 @@ layout: statement
 
 <v-click>
 
-<div class="text-xl mt-8">
+<div class="flex items-center justify-center gap-8 mt-12">
 
-📺 WebDevCody showed it on YouTube
-
+<div class="text-3xl">
+📺 <span class="font-bold">WebDevCody</span>
 </div>
 
-</v-click>
-
-<v-click>
-
-<div class="text-2xl mt-8">
-
-For the first time, I thought:
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-3xl mt-4 text-green-400">
-
-"I can actually **try** this."
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-lg mt-8 text-gray-400">
-
-No YAML. No overwhelming setup. Just TypeScript I already knew.
-
-</div>
-
-</v-click>
-
-<!--
-The turning point
-From paralysis to action
-SST removed the barrier to entry
--->
-
-<v-click>
-
-<div class="text-2xl mt-8">
-
-We're going to build an app that **you all**<br/>
-will use **right now**...
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-3xl mt-8 text-green-400">
-
-...and you'll see why SST changes everything.
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.youtube.com/watch?v=9OgkEVh9MNA" alt="QR Code" class="w-48 h-48" />
 
 </div>
 
@@ -354,16 +301,6 @@ class: text-center
 
 <LiveChat :maxMessages="8" />
 
-<v-click>
-
-<div class="text-xl mt-8">
-
-Type your **favorite tech stack** in the chat!
-
-</div>
-
-</v-click>
-
 <!--
 On admin panel: Click "Enable Chat"
 Wait 20 seconds for messages
@@ -377,25 +314,15 @@ layout: two-cols
 # The Chat You Just Used
 
 ```typescript
-const chat = new sst.aws.Realtime(
-  "Chat",
-  {
-    handler: "chat.handler"
-  }
-);
+import { auth } from "./auth";
+import { realtimeReadOnlyToken, realtimeWriteToken } from "./secrets";
+
+export const realtime = new sst.aws.Realtime("Realtime", {
+  authorizer: {
+    handler: "authorizer.handler",
+  },
+})
 ```
-
-<v-click>
-
-<div class="mt-8 text-lg">
-
-**3 lines of code.**
-
-That's it.
-
-</div>
-
-</v-click>
 
 ::right::
 
@@ -405,18 +332,18 @@ That's it.
 
 ## What SST Generated
 
-- API Gateway WebSocket
-- Lambda connect handler
-- Lambda message handler
-- Lambda disconnect handler
-- DynamoDB connections table
-- 17 IAM permissions
+- AWS IoT Core (MQTT broker)
+- Lambda authorizer function
+- IoT Core topic rules
+- IAM roles & permissions
 - CloudWatch log groups
-- Auto-scaling config
+- Auto-scaling policies
+- Security policies
+- Connection management
 
 <div class="mt-6 text-yellow-400 text-lg">
 
-**Terraform:** 247 lines
+**All configured automatically**
 
 </div>
 
@@ -448,35 +375,6 @@ Vote now on your phone!
 </div>
 
 </v-click>
-
-<!--
-Admin panel: Click "Enable Vote"
-Wait 15 seconds
-Watch the results come in
--->
-
----
-layout: center
----
-
-# Live Results
-
-<div class="max-w-4xl mx-auto">
-
-<div class="text-center mb-8 text-2xl">
-Results coming in real-time...
-</div>
-
-<!-- Placeholder for live results - will show via iframe or component -->
-<div class="bg-gray-800 p-8 rounded-lg">
-  <div class="space-y-4">
-    <div class="text-lg opacity-75">
-      Check your phones to see the live results!
-    </div>
-  </div>
-</div>
-
-</div>
 
 <!--
 Point to the screen
@@ -534,12 +432,6 @@ export const handler = async (event) => {
 
 </div>
 
-<div class="mt-4 text-lg text-green-400">
-
-Cost: **$0.0001** per vote
-
-</div>
-
 </div>
 
 </v-click>
@@ -557,19 +449,9 @@ layout: statement
 
 <v-click>
 
-<div class="text-xl mt-8">
+<div class="text-2xl mt-8">
 
-🎯 **Removed the fear** of breaking AWS
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-xl mt-4">
-
-⚡ **Hot reload with real services** - saw changes instantly
+🎯 **No more fear**
 
 </div>
 
@@ -577,9 +459,19 @@ layout: statement
 
 <v-click>
 
-<div class="text-xl mt-4">
+<div class="text-2xl mt-8">
 
-✅ **Best practices built-in** - SST warns you before you mess up
+⚡ **Instant feedback**
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="text-2xl mt-8">
+
+✅ **Built-in guardrails**
 
 </div>
 
@@ -589,7 +481,7 @@ layout: statement
 
 <div class="text-2xl mt-8 text-green-400">
 
-From **watching tutorials** to **shipping apps** in weeks.
+🚀 **Tutorials → Production**
 
 </div>
 
@@ -670,17 +562,16 @@ DX that matters
 -->
 
 ---
-layout: center
-class: text-center
+layout: statement
 ---
 
-# 📊 The Cost
+# Why I'm Sharing This
 
 <v-click>
 
-<div class="text-6xl mt-12 text-green-400 font-bold">
+<div class="text-2xl mt-8">
 
-$0.08
+😰 **Too scared → Shipping**
 
 </div>
 
@@ -688,9 +579,9 @@ $0.08
 
 <v-click>
 
-<div class="mt-8 text-2xl opacity-75">
+<div class="text-2xl mt-8">
 
-For everything you just saw
+📚 **Learning → Building**
 
 </div>
 
@@ -698,72 +589,28 @@ For everything you just saw
 
 <v-click>
 
-<div class="mt-12">
+<div class="text-3xl mt-8 text-green-400">
 
-| Service | Cost |
-|---------|------|
-| Lambda invocations | $0.0006 |
-| DynamoDB operations | $0.0013 |
-| WebSocket connections | $0.0003 |
-| IoT messages | $0.03 |
-| CloudFront transfer | $0.048 |
-| **Total** | **$0.08** |
+💪 **Found confidence**
+
+</div>
+
+</v-click>
+
+<v-click>
+
+<div class="text-xl mt-12 text-gray-400">
+
+Sharing what unlocked my potential
 
 </div>
 
 </v-click>
 
 <!--
-Shock value
-Serverless pricing advantage
--->
-
----
-layout: two-cols
----
-
-# What You Actually Built
-
-<div class="space-y-4 mt-4">
-
-✅ Real-time chat<br/>
-✅ Live voting system<br/>
-✅ WebSocket API<br/>
-✅ Database with aggregation<br/>
-✅ Global CDN<br/>
-✅ Auto-scaling infrastructure<br/>
-✅ Monitoring & logging<br/>
-✅ SSL certificates
-
-</div>
-
-::right::
-
-<v-click>
-
-<div class="ml-8">
-
-## Time Comparison
-
-**With Terraform:**
-- 📝 400+ lines of config
-- ⏱️ 2 days of work
-- 🐛 Probably buggy
-- 😰 Stressful debugging
-
-**With SST:**
-- 📝 12 lines of code
-- ⏱️ 10 minutes
-- ✅ Production-ready
-- 😌 Actually enjoyable
-
-</div>
-
-</v-click>
-
-<!--
-Recap what was accomplished
-Emphasize the difference
+Authentic conclusion
+Why you're really presenting
+The human impact, not the technical
 -->
 
 ---
@@ -813,106 +660,6 @@ github.com/keanuharrell/warsawjs
 <!--
 Clear call to action
 Make it easy to follow up
--->
-
----
-layout: center
-class: text-center
----
-
-# Questions? 🙋
-
-<div class="mt-12 grid grid-cols-3 gap-8 max-w-2xl mx-auto text-left">
-
-<div>
-
-**Docs**
-docs.sst.dev
-
-</div>
-
-<div>
-
-**Discord**
-sst.dev/discord
-
-</div>
-
-<div>
-
-**Twitter**
-@SST_dev
-
-</div>
-
-</div>
-
-<!--
-Open for Q&A
-Have answers ready for common questions
--->
-
----
-layout: statement
----
-
-# Why I'm Sharing This
-
-<v-click>
-
-<div class="text-xl mt-8">
-
-A year ago, I was **too scared** to deploy anything to AWS.
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-xl mt-4">
-
-Today, I've shipped **real apps** with real users.
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-2xl mt-8">
-
-SST didn't just teach me serverless...
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-3xl mt-4 text-green-400">
-
-It gave me **confidence** to build.
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-lg mt-12 text-gray-400">
-
-That's why I'm here. Not to sell you a tool,<br/>
-but to share what unlocked **my** potential.
-
-</div>
-
-</v-click>
-
-<!--
-Authentic conclusion
-Why you're really presenting
-The human impact, not the technical
 -->
 
 ---

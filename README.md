@@ -380,7 +380,7 @@ MIT License - feel free to use this code for your own projects!
 
 - 🌐 Website: [keanuharrell.com](https://keanuharrell.com)
 - 🐙 GitHub: [@keanuharrell](https://github.com/keanuharrell)
-- 📧 Email: hello@keanuharrell.com
+- 📧 Email: keanuharrell@icloud.com
 
 ---
 

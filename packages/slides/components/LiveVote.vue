@@ -76,13 +76,16 @@ const winner = computed(() => {
 
 <template>
   <div class="live-vote">
-    <div class="header">
+    <div class="vote-header">
       <div class="title-section">
         <h3>🗳️ What's the hardest part of AWS?</h3>
-        <div class="meta">
+        <div class="meta-stats">
           <span class="total-votes">{{ total }} votes</span>
           <span class="status" :class="{ connected }">
             {{ connected ? '● Live' : '○ Connecting' }}
+          </span>
+          <span v-if="winner && total > 0" class="winner-badge">
+            👑 {{ winner.emoji }} Winner
           </span>
         </div>
       </div>
@@ -95,17 +98,19 @@ const winner = computed(() => {
         class="vote-card"
         :class="{ winner: winner?.id === option.id && total > 0 }"
       >
-        <div class="card-header">
-          <span class="option-emoji">{{ option.emoji }}</span>
-          <span class="option-label">{{ option.label }}</span>
-        </div>
-
-        <div class="card-body">
-          <div class="percentage-display" :style="{ color: option.color }">
-            {{ percentage(option.id) }}%
+        <div class="card-content">
+          <div class="card-header">
+            <span class="option-emoji">{{ option.emoji }}</span>
+            <span class="option-label">{{ option.label }}</span>
           </div>
           <div class="option-text">{{ option.text }}</div>
-          <div class="vote-count">{{ votes[option.id] }} votes</div>
+        </div>
+
+        <div class="card-stats">
+          <div class="percentage" :style="{ color: option.color }">
+            {{ percentage(option.id) }}%
+          </div>
+          <div class="count">{{ votes[option.id] }}</div>
         </div>
 
         <div class="progress-bar">
@@ -134,31 +139,34 @@ const winner = computed(() => {
   margin: 0 auto;
 }
 
-.header {
+.vote-header {
   margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(168, 85, 247, 0.2);
 }
 
 .title-section h3 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #e5e7eb;
 }
 
-.meta {
+.meta-stats {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .total-votes {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #9ca3af;
   font-weight: 500;
 }
 
 .status {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #6b7280;
   padding: 0.15rem 0.5rem;
   border-radius: 8px;
@@ -172,77 +180,101 @@ const winner = computed(() => {
   animation: pulse 2s ease-in-out infinite;
 }
 
+.winner-badge {
+  font-size: 0.8rem;
+  color: #a855f7;
+  padding: 0.15rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(168, 85, 247, 0.2);
+  font-weight: 600;
+}
+
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
 }
 
 .vote-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 0.75rem;
   border: 2px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   position: relative;
-  overflow: hidden;
+  min-height: 140px;
 }
 
 .vote-card.winner {
-  border-color: rgba(168, 85, 247, 0.5);
+  border-color: rgba(168, 85, 247, 0.6);
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-  transform: scale(1.02);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05));
+  transform: scale(1.03);
 }
 
 .vote-card.winner::before {
   content: '👑';
   position: absolute;
-  top: 0.35rem;
-  right: 0.35rem;
-  font-size: 1rem;
+  top: 0.4rem;
+  right: 0.4rem;
+  font-size: 0.9rem;
   animation: float 2s ease-in-out infinite;
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   margin-bottom: 0.5rem;
 }
 
 .option-emoji {
-  font-size: 1.3rem;
+  font-size: 1.8rem;
 }
 
 .option-label {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   color: #a855f7;
-  padding: 0.15rem 0.5rem;
+  padding: 0.2rem 0.5rem;
   background: rgba(168, 85, 247, 0.2);
   border-radius: 5px;
 }
 
-.card-body {
+.option-text {
+  font-size: 0.75rem;
+  color: #d1d5db;
+  font-weight: 600;
   text-align: center;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.card-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
   margin-bottom: 0.5rem;
 }
 
-.percentage-display {
-  font-size: 1.8rem;
+.percentage {
+  font-size: 2rem;
   font-weight: 800;
   line-height: 1;
-  margin-bottom: 0.2rem;
 }
 
-.option-text {
-  font-size: 0.8rem;
-  color: #d1d5db;
-  font-weight: 600;
-  margin-bottom: 0.15rem;
-}
-
-.vote-count {
+.count {
   font-size: 0.7rem;
   color: #9ca3af;
 }
@@ -252,6 +284,7 @@ const winner = computed(() => {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
   overflow: hidden;
+  margin-top: auto;
 }
 
 .progress-fill {

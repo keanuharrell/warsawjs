@@ -61,7 +61,7 @@ export function PresentationRecap({
 
       <Section style={techSection}>
         <Text style={techCategory}>Infrastructure & DevOps</Text>
-        <Text style={techItem}>• <strong>SST (Ion)</strong> - Infrastructure as Code</Text>
+        <Text style={techItem}>• <strong>SST</strong> - Infrastructure as Code</Text>
         <Text style={techItem}>• <strong>AWS Lambda</strong> - Serverless functions</Text>
         <Text style={techItem}>• <strong>Bun</strong> - Fast JavaScript runtime</Text>
         <Text style={techItem}>• <strong>TypeScript</strong> - Type-safe development</Text>

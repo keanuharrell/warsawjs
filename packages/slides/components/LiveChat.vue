@@ -218,6 +218,9 @@ const totalMessages = computed(() => messages.value.length)
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .username {
@@ -226,12 +229,18 @@ const totalMessages = computed(() => messages.value.length)
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .text {
   color: #e5e7eb;
   font-size: 1rem;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .empty {
