@@ -10,9 +10,7 @@ import { EmailDemo } from './email-demo'
 import { UsernamePrompt } from './username-prompt'
 import { useRealtimeTopic } from '@/lib/realtime'
 import { useUsername } from '@/lib/use-username'
-import type { ControlMessage, ChatMessage, StepId } from '@warsawjs/core'
-
-type VoteResults = { A: number; B: number; C: number; D: number }
+import type { ControlMessage, ChatMessage, StepId, VoteResults } from '@warsawjs/core'
 
 interface DemoClientProps {
   initialMode?: StepId
@@ -21,6 +19,7 @@ interface DemoClientProps {
 }
 
 // Map step IDs to components
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const STEP_COMPONENTS: Record<StepId, React.ComponentType<any>> = {
   waiting: WaitingRoom,
   chat: ChatDemo,

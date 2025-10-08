@@ -12,6 +12,7 @@ export { emailService } from "./email";
 
 // Realtime/MQTT
 export * from "./realtime";
+export type { VoteResults } from "./realtime/types";
 
 // Demo configuration
 export * from "./demo";

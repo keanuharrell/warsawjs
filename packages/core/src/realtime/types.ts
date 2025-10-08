@@ -37,3 +37,11 @@ export interface TopicConfig {
   name: string
   qos?: 0 | 1 | 2
 }
+
+// Vote results
+export interface VoteResults {
+  A: number
+  B: number
+  C: number
+  D: number
+}

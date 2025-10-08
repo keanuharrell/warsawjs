@@ -67,7 +67,7 @@ export function AdminDashboard({
     } catch (error) {
       console.error('[Admin] Failed to enable chat:', error)
     }
-  }, [publish, connected])
+  }, [publish])
 
   const handleEnableVote = useCallback(async () => {
     const message: ControlMessage = {

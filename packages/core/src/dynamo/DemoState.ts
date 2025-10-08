@@ -30,6 +30,11 @@ export const DemoStateEntity = new Entity(
         required: true,
         default: false,
       },
+      emailEnabled: {
+        type: "boolean",
+        required: true,
+        default: false,
+      },
       updatedAt: {
         type: "number",
         required: true,
@@ -65,6 +70,7 @@ export type DemoState = {
   mode: "waiting" | "chat" | "vote" | "email";
   chatEnabled: boolean;
   voteEnabled: boolean;
+  emailEnabled: boolean;
   updatedAt: number;
   createdAt: number;
 };
@@ -75,7 +81,7 @@ export const DemoStateDB = {
     return result.data;
   },
 
-  update: async (state: Partial<Pick<DemoState, "mode" | "chatEnabled" | "voteEnabled">>) => {
+  update: async (state: Partial<Pick<DemoState, "mode" | "chatEnabled" | "voteEnabled" | "emailEnabled">>) => {
     const result = await DemoStateEntity.upsert({
       id: "current",
       ...state,
@@ -89,6 +95,7 @@ export const DemoStateDB = {
       mode: "waiting",
       chatEnabled: false,
       voteEnabled: false,
+      emailEnabled: false,
     }).go();
     return result.data;
   },
