@@ -90,15 +90,15 @@ const totalMessages = computed(() => messages.value.length)
 <style scoped>
 .live-chat {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 1.5rem;
-  min-height: 400px;
+  grid-template-columns: 250px 1fr;
+  gap: 1rem;
+  max-height: 400px;
 }
 
 .info-panel {
   background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(96, 165, 250, 0.05));
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 10px;
+  padding: 1rem;
   color: white;
   border: 2px solid rgba(96, 165, 250, 0.3);
   display: flex;
@@ -108,19 +108,19 @@ const totalMessages = computed(() => messages.value.length)
 .panel-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .info-panel h3 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #e5e7eb;
 }
 
 .description {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 0.85rem;
+  line-height: 1.5;
   color: #d1d5db;
   margin: 0;
 }
@@ -133,9 +133,9 @@ const totalMessages = computed(() => messages.value.length)
 .stats {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   margin-top: auto;
-  padding-top: 1.5rem;
+  padding-top: 1rem;
   border-top: 2px solid rgba(96, 165, 250, 0.2);
 }
 
@@ -144,18 +144,18 @@ const totalMessages = computed(() => messages.value.length)
 }
 
 .stat-value {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 800;
   color: #60a5fa;
   line-height: 1;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .stat-icon {
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #6b7280;
   line-height: 1;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
   transition: all 0.3s ease;
 }
 
@@ -165,30 +165,34 @@ const totalMessages = computed(() => messages.value.length)
 }
 
 .stat-label {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #9ca3af;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   font-weight: 600;
 }
 
 .messages-panel {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 40, 0.9));
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 10px;
+  padding: 1rem;
   border: 1px solid rgba(96, 165, 250, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
+  max-height: 400px;
+  overflow: hidden;
 }
 
 .messages {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   padding-right: 0.5rem;
+  min-height: 0;
 }
 
 .messages::-webkit-scrollbar {

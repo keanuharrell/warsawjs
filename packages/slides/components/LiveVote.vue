@@ -125,41 +125,43 @@ const winner = computed(() => {
 <style scoped>
 .live-vote {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(30, 20, 50, 0.9));
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1rem;
   color: white;
   border: 1px solid rgba(168, 85, 247, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .title-section h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.4rem;
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #e5e7eb;
 }
 
 .meta {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: center;
 }
 
 .total-votes {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #9ca3af;
   font-weight: 500;
 }
 
 .status {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #6b7280;
-  padding: 0.2rem 0.6rem;
-  border-radius: 10px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.05);
   font-weight: 600;
 }
@@ -173,13 +175,13 @@ const winner = computed(() => {
 .results-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .vote-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: 8px;
+  padding: 0.75rem;
   border: 2px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   position: relative;
@@ -195,60 +197,60 @@ const winner = computed(() => {
 .vote-card.winner::before {
   content: '👑';
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  font-size: 1.2rem;
+  top: 0.35rem;
+  right: 0.35rem;
+  font-size: 1rem;
   animation: float 2s ease-in-out infinite;
 }
 
 .card-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .option-emoji {
-  font-size: 1.8rem;
+  font-size: 1.3rem;
 }
 
 .option-label {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #a855f7;
-  padding: 0.2rem 0.6rem;
+  padding: 0.15rem 0.5rem;
   background: rgba(168, 85, 247, 0.2);
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .card-body {
   text-align: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .percentage-display {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 800;
   line-height: 1;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .option-text {
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   color: #d1d5db;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
 }
 
 .vote-count {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: #9ca3af;
 }
 
 .progress-bar {
-  height: 6px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  border-radius: 2px;
   overflow: hidden;
 }
 

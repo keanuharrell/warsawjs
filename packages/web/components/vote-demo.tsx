@@ -49,11 +49,21 @@ export function VoteDemo({ initialVotes }: VoteDemoProps) {
   const { messages, publish } = useRealtimeTopic<VoteMessage>('vote')
 
   // Calculate results from initial votes + real-time messages
+  // Deduplicate by userId (last vote wins) to match backend behavior
   const results = useMemo(() => {
     const counts: VoteResults = { ...initialVotes }
+
+    // Track each user's latest vote from MQTT messages
+    const userVotes = new Map<string, VoteOption>()
     messages.forEach((msg) => {
-      counts[msg.option] = (counts[msg.option] || 0) + 1
+      userVotes.set(msg.userId, msg.option)
     })
+
+    // Count unique user votes
+    userVotes.forEach((option) => {
+      counts[option] = (counts[option] || 0) + 1
+    })
+
     return counts
   }, [messages, initialVotes])
 
