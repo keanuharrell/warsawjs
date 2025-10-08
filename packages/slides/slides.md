@@ -137,8 +137,6 @@ You tell the emotional story verbally
 layout: statement
 ---
 
-<MqttStatus />
-
 # Then I Discovered SST
 
 <v-click>
@@ -354,6 +352,8 @@ class: text-center
 # 🎮 Demo #1
 ## Real-Time Chat
 
+<LiveChat :maxMessages="8" />
+
 <v-click>
 
 <div class="text-xl mt-8">
@@ -437,26 +437,7 @@ class: text-center
 # 🗳️ Demo #2
 ## Interactive Vote
 
-<v-click>
-
-<div class="text-2xl mt-8">
-
-**What's the hardest part of AWS?**
-
-</div>
-
-</v-click>
-
-<v-click>
-
-<div class="grid grid-cols-2 gap-4 mt-8 text-left max-w-2xl mx-auto">
-  <div class="bg-blue-500/20 p-4 rounded">A) IAM Permissions 🔐</div>
-  <div class="bg-green-500/20 p-4 rounded">B) The Bill 💸</div>
-  <div class="bg-yellow-500/20 p-4 rounded">C) Finding the Right Service 🔍</div>
-  <div class="bg-red-500/20 p-4 rounded">D) All of the Above 😅</div>
-</div>
-
-</v-click>
+<LiveVote />
 
 <v-click>
 

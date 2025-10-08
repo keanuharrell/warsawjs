@@ -22,6 +22,7 @@ interface VoteDemoProps {
 export function VoteDemo({ initialVotes }: VoteDemoProps) {
   const [voted, setVoted] = useState(false)
   const [userVote, setUserVote] = useState<VoteOption | null>(null)
+  const [isVoting, setIsVoting] = useState(false)
   const [userId] = useState(() => `user_${Math.random().toString(36).substr(2, 9)}`)
 
   const { messages, publish } = useRealtimeTopic<VoteMessage>('vote')
@@ -36,6 +37,10 @@ export function VoteDemo({ initialVotes }: VoteDemoProps) {
   }, [messages, initialVotes])
 
   const handleVote = useCallback(async (optionId: VoteOption) => {
+    // Prevent multiple votes at the same time
+    if (isVoting) return
+
+    setIsVoting(true)
     const voteMessage: VoteMessage = {
       option: optionId,
       userId,
@@ -56,8 +61,10 @@ export function VoteDemo({ initialVotes }: VoteDemoProps) {
       setUserVote(optionId)
     } catch (error) {
       console.error('Failed to submit vote:', error)
+    } finally {
+      setIsVoting(false)
     }
-  }, [userId, publish])
+  }, [userId, publish, isVoting])
 
   const total = Object.values(results).reduce((a, b) => a + b, 0)
   const percentage = (option: VoteOption) =>
@@ -77,6 +84,7 @@ export function VoteDemo({ initialVotes }: VoteDemoProps) {
             <Button
               key={option.id}
               onClick={() => handleVote(option.id)}
+              disabled={isVoting}
               variant={userVote === option.id ? "default" : "outline"}
               className="w-full h-auto p-0 relative overflow-hidden"
             >
