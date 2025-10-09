@@ -228,7 +228,7 @@ Slidev presentation with embedded real-time components.
 | **Real-time** | [AWS IoT Core](https://aws.amazon.com/iot-core/) | Managed MQTT broker |
 | **Database** | [DynamoDB](https://aws.amazon.com/dynamodb/) | Serverless NoSQL database |
 | **Auth** | [OpenAuth](https://github.com/openauthjs/openauth) | Modern auth for serverless |
-| **Email** | [Resend](https://resend.com) | Developer-friendly email API |
+| **Email** | [Amazon SES](https://aws.amazon.com/ses/) | Scalable email service |
 | **Styling** | [Tailwind CSS](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com) | Beautiful, accessible components |
 | **ORM** | [ElectroDB](https://electrodb.dev) | DynamoDB made easy |
 
