@@ -66,7 +66,7 @@ const realtime = new sst.aws.Realtime("Chat", {
 │  └─────────────┘      └──────────────┘      └────────────┘ │
 │                                                               │
 │  ┌─────────────┐      ┌──────────────┐      ┌────────────┐ │
-│  │  Admin      │◄────►│  DynamoDB    │      │  Resend    │ │
+│  │  Admin      │◄────►│  DynamoDB    │      │ Amazon SES │ │
 │  │  Dashboard  │      │  Tables      │      │  Email     │ │
 │  └─────────────┘      └──────────────┘      └────────────┘ │
 │                                                               │
