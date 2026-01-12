@@ -8,7 +8,7 @@
   "author": {
     "email": "keanuharrell@icloud.com",
     "name": "Keanu Harrell",
-    "url": "https://www.keanuharrell.com"
+    "url": "https://keanuharrell.com"
   },
   "scripts": {
     "dev": "sst dev",
@@ -17,10 +17,10 @@
     "typecheck": "bun run --cwd packages/core typecheck && bun run --cwd packages/web typecheck && bun run --cwd packages/functions typecheck"
   },
   "devDependencies": {
-    "@tsconfig/node22": "^22",
-    "typescript": "^5"
+    "@tsconfig/node22": "^22.0.5",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "sst": "^3"
+    "sst": "^3.17.25"
   }
 }
